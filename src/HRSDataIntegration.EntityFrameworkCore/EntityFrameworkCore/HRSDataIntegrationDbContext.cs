@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Monitoring.EntityFrameworkCore;
+using Monitoring.ServiceEndpoints;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -31,6 +33,8 @@ public class HRSDataIntegrationDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
+    public DbSet<ServiceEndpoint> ServiceEndpoints { get; set; }
+    public DbSet<ServiceStatusSnapshot> ServiceStatusSnapshots { get; set; }
 
     #region Entities from the modules
 
@@ -134,6 +138,8 @@ public class HRSDataIntegrationDbContext :
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.ConfigureMonitoring();
+
         builder.Entity<Unit>()
             .HasMany(u => u.UnitDetails)
             .WithOne(ud => ud.Unit)
