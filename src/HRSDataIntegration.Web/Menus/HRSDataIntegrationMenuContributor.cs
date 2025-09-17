@@ -35,6 +35,16 @@ public class HRSDataIntegrationMenuContributor : IMenuContributor
             )
         );
 
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                HRSDataIntegrationMenus.Monitoring,
+                l["Menu:Monitoring"],
+                "~/Monitoring",
+                icon: "fa fa-chart-line",
+                order: 2
+            )
+        );
+
 
         //Administration
         var administration = context.Menu.GetAdministration();
