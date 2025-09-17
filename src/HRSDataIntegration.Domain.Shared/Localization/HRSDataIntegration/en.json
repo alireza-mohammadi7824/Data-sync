@@ -9,17 +9,29 @@
     "Monitoring:ActiveJobs": "{0} active records",
     "Monitoring:JobDetails": "Job details",
     "Monitoring:LastUpdated": "Updated {0}",
+// codex/add-monitoringapplication-to-datasync-gi4p0i
+    "Monitoring:JobGroups": "Job groups",
+    "Monitoring:JobGroupsDescription": "Distinct groups registered for positions",
+    "Monitoring:JobRasteh": "Job rasteh",
+    "Monitoring:JobRastehDescription": "Rasteh classifications available in the system",
+=======
     "Monitoring:Units": "Units",
     "Monitoring:UnitsDescription": "Organizational structure records",
     "Monitoring:Posts": "Posts",
     "Monitoring:PostsDescription": "Organizational post definitions",
+//main
     "Monitoring:JobStatus": "Latest job activities",
     "Monitoring:JobStatusDescription": "Tracking the most recent changes received from source systems.",
     "Monitoring:SearchJobs": "Filter jobs...",
     "Monitoring:JobCode": "Code",
     "Monitoring:JobTitle": "Title",
+// codex/add-monitoringapplication-to-datasync-gi4p0i
+    "Monitoring:JobGroupColumn": "Group",
+    "Monitoring:JobRastehColumn": "Rasteh",
+=======
     "Monitoring:JobGroup": "Group",
     "Monitoring:JobRasteh": "Rasteh",
+// main
     "Monitoring:IsActive": "Active",
     "Monitoring:EffectiveFrom": "Effective from",
     "Monitoring:EffectiveTo": "Effective to",
@@ -29,6 +41,10 @@
     "Monitoring:NoJobs": "No job activities have been received yet.",
     "Monitoring:Active": "Active",
     "Monitoring:Inactive": "Inactive",
+// codex/add-monitoringapplication-to-datasync-gi4p0i
+    "Monitoring:NeverUpdated": "No activity recorded yet.",
+=======
+// main
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
     "Welcome": "Welcome"
   }
