@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +15,25 @@ namespace Monitoring.Web.Pages.Monitoring.Services;
 public class DetailModel : MonitoringPageModel
 {
     private readonly IServiceEndpointAppService _serviceEndpointAppService;
+    private readonly IHealthCheckAppService _healthCheckAppService;
 
     [BindProperty(SupportsGet = true)]
     public Guid Id { get; set; }
 
     public ServiceEndpointDto Endpoint { get; private set; } = new();
 
+    public List<ServiceStatusSnapshotDto> History { get; private set; } = new();
+
+    public Dictionary<string, string> StatusTextLookup { get; private set; } = new();
+
+    public Dictionary<string, string> StatusBadgeLookup { get; private set; } = new();
+
+    public DetailModel(
+        IServiceEndpointAppService serviceEndpointAppService,
+        IHealthCheckAppService healthCheckAppService)
+    {
+        _serviceEndpointAppService = serviceEndpointAppService;
+        _healthCheckAppService = healthCheckAppService;
     public DetailModel(IServiceEndpointAppService serviceEndpointAppService)
     {
         _serviceEndpointAppService = serviceEndpointAppService;
@@ -28,6 +43,24 @@ public class DetailModel : MonitoringPageModel
     {
         PageLayout.Content.MenuItemName = MonitoringMenus.Monitoring;
         Endpoint = await _serviceEndpointAppService.GetAsync(Id);
+        History = await _healthCheckAppService.GetHistoryAsync(Id, 50);
+        PopulateLookups();
+        return Page();
+    }
+
+    [Authorize(MonitoringPermissions.RunCheck)]
+    public virtual async Task<JsonResult> OnPostRunCheckAsync()
+    {
+        var result = await _healthCheckAppService.RunCheckAsync(Id);
+        var history = await _healthCheckAppService.GetHistoryAsync(Id, 50);
+
+        return new JsonResult(new
+        {
+            result,
+            history
+        });
+    }
+
         return Page();
     }
 
@@ -67,5 +100,14 @@ public class DetailModel : MonitoringPageModel
         return durationMs.HasValue
             ? L["Monitoring:MillisecondsFormat", durationMs.Value]
             : L["Monitoring:NotAvailable"];
+    }
+
+    private void PopulateLookups()
+    {
+        StatusTextLookup = Enum.GetValues<MonitoringStatus>()
+            .ToDictionary(status => ((int)status).ToString(), GetStatusText);
+
+        StatusBadgeLookup = Enum.GetValues<MonitoringStatus>()
+            .ToDictionary(status => ((int)status).ToString(), GetStatusBadgeClass);
     }
 }
