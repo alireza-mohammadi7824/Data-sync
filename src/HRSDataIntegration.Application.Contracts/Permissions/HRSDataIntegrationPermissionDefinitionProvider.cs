@@ -17,11 +17,13 @@ public class HRSDataIntegrationPermissionDefinitionProvider : PermissionDefiniti
 
         var services = monitoring.AddChild(
             HRSDataIntegrationPermissions.Monitoring.Services.Default,
-            L("Permission:MonitoringServices"));
+            L("Permission:MonitoringServices"),
+            isEnabledByDefault: true);
 
         services.AddChild(
             HRSDataIntegrationPermissions.Monitoring.Services.Create,
-            L("Permission:MonitoringServicesCreate"));
+            L("Permission:MonitoringServicesCreate"),
+            isEnabledByDefault: true);
     }
 
     private static LocalizableString L(string name)
