@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HRSDataIntegration.Application.Contracts\HRSDataIntegration.Application.Contracts.csproj" />
     <ProjectReference Include="..\HRSDataIntegration.Domain\HRSDataIntegration.Domain.csproj" />
+    <ProjectReference Include="..\..\modules\Monitoring\src\Monitoring.EntityFrameworkCore\Monitoring.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

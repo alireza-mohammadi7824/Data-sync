@@ -1,0 +1,13 @@
+{
+  "culture": "fa",
+  "texts": {
+    "Permission:Monitoring": "پایش",
+    "Permission:Monitoring.Default": "دسترسی به پایش",
+    "Permission:Monitoring.View": "مشاهده پایش",
+    "Permission:Monitoring.Create": "ایجاد مورد پایش",
+    "Permission:Monitoring.Edit": "ویرایش مورد پایش",
+    "Permission:Monitoring.Delete": "حذف مورد پایش",
+    "Permission:Monitoring.RunCheck": "اجرای بررسی پایش",
+    "Menu:Monitoring": "پایش"
+  }
+}

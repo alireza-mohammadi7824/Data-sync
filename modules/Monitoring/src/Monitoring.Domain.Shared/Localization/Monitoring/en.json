@@ -1,0 +1,13 @@
+{
+  "culture": "en",
+  "texts": {
+    "Permission:Monitoring": "Monitoring",
+    "Permission:Monitoring.Default": "Access monitoring",
+    "Permission:Monitoring.View": "View monitoring dashboards",
+    "Permission:Monitoring.Create": "Create monitoring entries",
+    "Permission:Monitoring.Edit": "Edit monitoring entries",
+    "Permission:Monitoring.Delete": "Delete monitoring entries",
+    "Permission:Monitoring.RunCheck": "Run monitoring checks",
+    "Menu:Monitoring": "Monitoring"
+  }
+}
