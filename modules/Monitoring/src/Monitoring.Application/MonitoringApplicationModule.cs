@@ -1,4 +1,5 @@
 using System;
+
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
@@ -27,6 +28,8 @@ public class MonitoringApplicationModule : AbpModule
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.HttpHealthCheck>();
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.ApiHealthCheck>();
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.TcpHealthCheck>();
+        context.Services.AddTransient<ServiceEndpoints.ServiceEndpointAppService>();
+        context.Services.AddTransient<ServiceEndpoints.HealthCheckAppService>();
 
         Configure<AbpAutoMapperOptions>(options =>
         {

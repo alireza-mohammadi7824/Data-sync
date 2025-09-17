@@ -29,6 +29,9 @@
                             id="run-check-button"
                             text="@L[\"Monitoring:RunCheckNow\"]"
                             icon="history" />
+                            text="@L[\"Monitoring:RunCheckNow\"]"
+                            icon="history"
+                            disabled />
             </abp-authorize>
             <abp-authorize policy="@MonitoringPermissions.Edit">
                 <abp-button button-type="OutlinePrimary"
@@ -66,6 +69,7 @@
                 <dt class="col-sm-3">@L["Monitoring:LastKnownStatus"]</dt>
                 <dd class="col-sm-9">
                     <span id="last-status-badge" class="@Model.GetStatusBadgeClass(Model.Endpoint.LastKnownStatus)">
+                    <span class="@Model.GetStatusBadgeClass(Model.Endpoint.LastKnownStatus)">
                         @Model.GetStatusText(Model.Endpoint.LastKnownStatus)
                     </span>
                 </dd>
@@ -79,6 +83,11 @@
                     else
                     {
                         <span id="last-check-time" class="text-muted">@L["Monitoring:NeverChecked"]</span>
+                        @Model.Endpoint.LastCheckTime.Value.ToLocalTime().ToString("f")
+                    }
+                    else
+                    {
+                        <span class="text-muted">@L["Monitoring:NeverChecked"]</span>
                     }
                 </dd>
 
@@ -86,6 +95,7 @@
                 <dd class="col-sm-9">
                     <span id="last-response-time">@Model.GetResponseDurationText(Model.Endpoint.LastResponseDurationMilliseconds)</span>
                 </dd>
+                <dd class="col-sm-9">@Model.GetResponseDurationText(Model.Endpoint.LastResponseDurationMilliseconds)</dd>
             </dl>
         </div>
     </div>
@@ -271,4 +281,8 @@
             runCheckButton?.addEventListener('click', runCheck);
         })();
     </script>
+}
+            <p class="text-muted mb-0">@L["Monitoring:HistoryPlaceholder"]</p>
+        </div>
+    </div>
 }

@@ -35,6 +35,7 @@
     "Monitoring:RunCheckNow": "Run check now",
     "Monitoring:RunCheckSuccess": "Health check completed with status {0}.",
     "Monitoring:RunCheckFailure": "Failed to execute the health check.",
+    "Monitoring:RunCheckNow": "Run check now",
     "Monitoring:Cancel": "Cancel",
     "Monitoring:Save": "Save",
     "Monitoring:Table.Name": "Name",
@@ -75,5 +76,6 @@
     "Monitoring:Status.Healthy": "Healthy",
     "Monitoring:Status.Degraded": "Degraded",
     "Monitoring:Status.Unhealthy": "Unhealthy"
+   "Menu:Monitoring": "Monitoring"
   }
 }

@@ -29,6 +29,17 @@ public class HealthCheckAppService : ApplicationService, IHealthCheckAppService
         _serviceEndpointRepository = serviceEndpointRepository;
         _statusSnapshotRepository = statusSnapshotRepository;
         _strategies = BuildStrategyMap(strategies);
+public class HealthCheckAppService : ApplicationService
+{
+    private readonly IRepository<ServiceEndpoint, Guid> _serviceEndpointRepository;
+    private readonly IRepository<ServiceStatusSnapshot, Guid> _statusSnapshotRepository;
+
+    public HealthCheckAppService(
+        IRepository<ServiceEndpoint, Guid> serviceEndpointRepository,
+        IRepository<ServiceStatusSnapshot, Guid> statusSnapshotRepository)
+    {
+        _serviceEndpointRepository = serviceEndpointRepository;
+        _statusSnapshotRepository = statusSnapshotRepository;
     }
 
     [Authorize(MonitoringPermissions.RunCheck)]
@@ -79,6 +90,14 @@ public class HealthCheckAppService : ApplicationService, IHealthCheckAppService
         await CurrentUnitOfWork.SaveChangesAsync();
 
         return ObjectMapper.Map<ServiceStatusSnapshot, RunCheckResultDto>(snapshot);
+        var now = Clock.Now;
+
+        return new RunCheckResultDto
+        {
+            ServiceEndpointId = endpoint.Id,
+            Status = MonitoringStatus.Unknown,
+            CheckedAt = now
+        };
     }
 
     [Authorize(MonitoringPermissions.View)]
