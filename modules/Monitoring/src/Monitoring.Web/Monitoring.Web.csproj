@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Monitoring.Domain.Shared/Monitoring.Domain.Shared.csproj" />
+    <ProjectReference Include="../Monitoring.Application.Contracts/Monitoring.Application.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization/Monitoring/*.json" />

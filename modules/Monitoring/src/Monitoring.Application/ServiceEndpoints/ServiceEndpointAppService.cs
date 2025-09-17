@@ -16,7 +16,8 @@ public class ServiceEndpointAppService : CrudAppService<
     Guid,
     PagedAndSortedResultRequestDto,
     CreateUpdateServiceEndpointDto,
-    CreateUpdateServiceEndpointDto>
+    CreateUpdateServiceEndpointDto>,
+    IServiceEndpointAppService
 {
     public ServiceEndpointAppService(IRepository<ServiceEndpoint, Guid> repository)
         : base(repository)

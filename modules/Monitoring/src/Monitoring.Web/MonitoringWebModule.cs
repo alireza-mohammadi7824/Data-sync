@@ -25,6 +25,9 @@ public class MonitoringWebModule : AbpModule
         Configure<RazorPagesOptions>(options =>
         {
             options.Conventions.AuthorizePage("/Monitoring/Index", MonitoringPermissions.Default);
+            options.Conventions.AuthorizePage("/Monitoring/Services/Create", MonitoringPermissions.Create);
+            options.Conventions.AuthorizePage("/Monitoring/Services/Edit", MonitoringPermissions.Edit);
+            options.Conventions.AuthorizePage("/Monitoring/Services/Detail", MonitoringPermissions.View);
         });
 
         Configure<AbpVirtualFileSystemOptions>(options =>
