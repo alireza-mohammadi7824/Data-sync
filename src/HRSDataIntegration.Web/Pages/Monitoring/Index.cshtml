@@ -13,6 +13,15 @@
     var lastUpdatedText = Model.MonitoringSummary.GeneratedAt != default
         ? L["Monitoring:LastUpdated", Model.MonitoringSummary.GeneratedAt.ToLocalTime().ToString("g")]
         : L["Monitoring:NeverUpdated"];
+
+    var lastUpdatedText = Model.MonitoringSummary.GeneratedAt != default
+        ? L["Monitoring:LastUpdated", Model.MonitoringSummary.GeneratedAt.ToLocalTime().ToString("g")]
+        : L["Monitoring:NeverUpdated"];
+
+    var lastUpdatedText = Model.Summary.GeneratedAt != default
+        ? L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]
+        : L["Monitoring:NeverUpdated"];
+
 }
 
 @section styles {
@@ -27,6 +36,12 @@
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:TotalJobs"]</div>
                     <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobs</div>
                     <div class="text-muted">@L["Monitoring:ActiveJobs", Model.MonitoringSummary.ActiveJobs]</div>
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobs</div>
+                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.MonitoringSummary.ActiveJobs]</div>
+
+                    <div class="display-6 fw-bold">@Model.Summary.TotalJobs</div>
+                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.Summary.ActiveJobs]</div>
+
                 </div>
             </div>
         </div>
@@ -36,6 +51,15 @@
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobDetails"]</div>
                     <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobDetails</div>
                     <div class="text-muted">@lastUpdatedText</div>
+
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobDetails</div>
+                    <div class="text-muted">@lastUpdatedText</div>
+
+                    <div class="display-6 fw-bold">@Model.Summary.TotalJobDetails</div>
+                    <div class="text-muted">@lastUpdatedText</div>
+
+                    <div class="text-muted">@L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]</div>
+
                 </div>
             </div>
         </div>
@@ -45,6 +69,20 @@
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
                     <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobGroups</div>
                     <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
+
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobGroups</div>
+                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
+                    <div class="display-6 fw-bold">@Model.Summary.TotalJobGroups</div>
+                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Units"]</div>
+                    <div class="display-6 fw-bold">@Model.Summary.TotalUnits</div>
+                    <div class="text-muted">@L["Monitoring:UnitsDescription"]</div>
+
                 </div>
             </div>
         </div>
@@ -54,6 +92,20 @@
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
                     <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobRasteh</div>
                     <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
+=======
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobRasteh</div>
+                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
+                    <div class="display-6 fw-bold">@Model.Summary.TotalJobRasteh</div>
+                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Posts"]</div>
+                    <div class="display-6 fw-bold">@Model.Summary.TotalPosts</div>
+                    <div class="text-muted">@L["Monitoring:PostsDescription"]</div>
+
                 </div>
             </div>
         </div>
@@ -77,6 +129,16 @@
                         <th scope="col">@L["Monitoring:JobTitle"]</th>
                         <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
                         <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
+
+
+                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
+                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
+
+                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
+                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
+                        <th scope="col">@L["Monitoring:JobGroup"]</th>
+                        <th scope="col">@L["Monitoring:JobRasteh"]</th>
+
                         <th scope="col">@L["Monitoring:IsActive"]</th>
                         <th scope="col">@L["Monitoring:EffectiveFrom"]</th>
                         <th scope="col">@L["Monitoring:EffectiveTo"]</th>
@@ -87,6 +149,12 @@
                 </thead>
                 <tbody>
                     @if (!Model.MonitoringJobs.Any())
+
+
+                    @if (!Model.MonitoringJobs.Any())
+
+                    @if (!Model.Jobs.Any())
+
                     {
                         <tr>
                             <td colspan="10" class="text-center text-muted py-4">@L["Monitoring:NoJobs"]</td>
@@ -95,6 +163,12 @@
                     else
                     {
                         foreach (var job in Model.MonitoringJobs)
+
+
+                        foreach (var job in Model.MonitoringJobs)
+
+                        foreach (var job in Model.Jobs)
+
                         {
                             var searchText = string.Join(" ", new[]
                             {

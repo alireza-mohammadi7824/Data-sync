@@ -9,17 +9,39 @@
     "Monitoring:ActiveJobs": "{0} active records",
     "Monitoring:JobDetails": "Job details",
     "Monitoring:LastUpdated": "Updated {0}",
+
     "Monitoring:JobGroups": "Job groups",
     "Monitoring:JobGroupsDescription": "Distinct groups registered for positions",
     "Monitoring:JobRasteh": "Job rasteh",
     "Monitoring:JobRastehDescription": "Rasteh classifications available in the system",
+
+
+    "Monitoring:Units": "Units",
+    "Monitoring:UnitsDescription": "Organizational structure records",
+    "Monitoring:Posts": "Posts",
+    "Monitoring:PostsDescription": "Organizational post definitions",
+
+
     "Monitoring:JobStatus": "Latest job activities",
     "Monitoring:JobStatusDescription": "Tracking the most recent changes received from source systems.",
     "Monitoring:SearchJobs": "Filter jobs...",
     "Monitoring:JobCode": "Code",
     "Monitoring:JobTitle": "Title",
+
     "Monitoring:JobGroupColumn": "Group",
     "Monitoring:JobRastehColumn": "Rasteh",
+=======
+
+    "Monitoring:JobGroupColumn": "Group",
+    "Monitoring:JobRastehColumn": "Rasteh",
+
+    "Monitoring:JobGroupColumn": "Group",
+    "Monitoring:JobRastehColumn": "Rasteh",
+
+    "Monitoring:JobGroup": "Group",
+    "Monitoring:JobRasteh": "Rasteh",
+
+
     "Monitoring:IsActive": "Active",
     "Monitoring:EffectiveFrom": "Effective from",
     "Monitoring:EffectiveTo": "Effective to",
@@ -30,6 +52,13 @@
     "Monitoring:Active": "Active",
     "Monitoring:Inactive": "Inactive",
     "Monitoring:NeverUpdated": "No activity recorded yet.",
+
+
+    "Monitoring:NeverUpdated": "No activity recorded yet.",
+
+    "Monitoring:NeverUpdated": "No activity recorded yet.",
+
+
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
     "Welcome": "Welcome"
   }
