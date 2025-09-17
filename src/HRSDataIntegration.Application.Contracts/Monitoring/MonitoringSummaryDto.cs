@@ -1,6 +1,6 @@
 using System;
 
-// codex/add-monitoringapplication-to-datasync-siqgy5
+
 namespace HRSDataIntegration.Monitoring;
 
 public class MonitoringSummaryDto
@@ -16,6 +16,7 @@ public class MonitoringSummaryDto
     public int TotalJobRasteh { get; set; }
 
     public DateTime GeneratedAt { get; set; }
+
 
 namespace HRSDataIntegration.Monitoring
 {
@@ -35,5 +36,4 @@ namespace HRSDataIntegration.Monitoring
 
         public DateTime GeneratedAt { get; set; }
     }
-// main
 }

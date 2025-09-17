@@ -12,15 +12,16 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
 {
     private readonly ISqlRepository<Job> _jobRepository;
     private readonly ISqlRepository<JobDetail> _jobDetailRepository;
-// codex/add-monitoringapplication-to-datasync-siqgy5
     private readonly ISqlRepository<JobGroup> _jobGroupRepository;
     private readonly ISqlRepository<JobRasteh> _jobRastehRepository;
 
-    // from codex/add-monitoringapplication-to-datasync-gi4p0i
     private readonly ISqlRepository<JobGroup> _jobGroupRepository;
     private readonly ISqlRepository<JobRasteh> _jobRastehRepository;
 
-    // from main
+    private readonly ISqlRepository<JobGroup> _jobGroupRepository;
+    private readonly ISqlRepository<JobRasteh> _jobRastehRepository;
+
+    //  main
     private readonly ISqlRepository<Unit> _unitRepository;
     private readonly ISqlRepository<Post> _postRepository;
 
@@ -29,28 +30,27 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
         ISqlRepository<Job> jobRepository,
         ISqlRepository<JobDetail> jobDetailRepository,
         ISqlRepository<JobGroup> jobGroupRepository,
-// codex/add-monitoringapplication-to-datasync-siqgy5
         ISqlRepository<JobRasteh> jobRastehRepository)
-=======
+
+        ISqlRepository<JobRasteh> jobRastehRepository)
+
         ISqlRepository<JobRasteh> jobRastehRepository,
         ISqlRepository<Unit> unitRepository,
         ISqlRepository<Post> postRepository)
-/// main
+
     {
         _jobRepository = jobRepository;
         _jobDetailRepository = jobDetailRepository;
         _jobGroupRepository = jobGroupRepository;
         _jobRastehRepository = jobRastehRepository;
-        codex/add-monitoringapplication-to-datasync-siqgy5
-
-        _unitRepository = unitRepository;
+       _unitRepository = unitRepository;
         _postRepository = postRepository;
-// main
+
     }
 
     public async Task<MonitoringDashboardDto> GetDashboardAsync()
     {
-// codex/add-monitoringapplication-to-datasync-siqgy5
+=======
         var jobQueryable = _jobRepository
             .GetQueryable()
             .AsNoTracking();
@@ -68,6 +68,7 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
             .AsNoTracking();
 
 =======
+=======
         // Queryables (با AsNoTracking برای کارایی بهتر dashboard)
         var jobQueryable = _jobRepository.GetQueryable().AsNoTracking();
         var jobDetailQueryable = _jobDetailRepository.GetQueryable().AsNoTracking();
@@ -76,13 +77,13 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
         var unitQueryable = _unitRepository.GetQueryable().AsNoTracking();
         var postQueryable = _postRepository.GetQueryable().AsNoTracking();
 
-        // Summary با ادغام هر دو سمت
-// main
+ 
         var summary = new MonitoringSummaryDto
         {
             TotalJobs = await AsyncExecuter.CountAsync(jobQueryable),
             ActiveJobs = await AsyncExecuter.CountAsync(jobQueryable.Where(job => job.IsActive)),
             TotalJobDetails = await AsyncExecuter.CountAsync(jobDetailQueryable),
+=======
 // codex/add-monitoringapplication-to-datasync-siqgy5
             TotalJobGroups = await AsyncExecuter.CountAsync(jobGroupQueryable),
             TotalJobRasteh = await AsyncExecuter.CountAsync(jobRastehQueryable)
@@ -108,6 +109,7 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
                 })
         );
 
+=======
 
 
             // from codex/add-monitoringapplication-to-datasync-gi4p0i
@@ -146,7 +148,7 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
             })
             .ToList();
 
-> main
+
         foreach (var job in jobs)
         {
             job.LastActivityTime = Clock.Normalize(job.LastActivityTime);
@@ -155,6 +157,8 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
         var latestActivity = jobs.FirstOrDefault()?.LastActivityTime;
         summary.GeneratedAt = latestActivity.HasValue && latestActivity.Value != default
             ? Clock.Normalize(latestActivity.Value)
+            : default;
+
             : Clock.Normalize(Clock.Now);
 
         return new MonitoringDashboardDto
