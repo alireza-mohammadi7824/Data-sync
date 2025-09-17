@@ -10,12 +10,16 @@
 @{
     ViewBag.PageTitle = L["Monitoring:Title"];
     PageLayout.Content.MenuItemName = HRSDataIntegrationMenus.Monitoring;
+ codex/add-monitoringapplication-to-datasync-siqgy5
+    var lastUpdatedText = Model.MonitoringSummary.GeneratedAt != default
+        ? L["Monitoring:LastUpdated", Model.MonitoringSummary.GeneratedAt.ToLocalTime().ToString("g")]
+        : L["Monitoring:NeverUpdated"];
+
 // codex/add-monitoringapplication-to-datasync-gi4p0i
     var lastUpdatedText = Model.Summary.GeneratedAt != default
         ? L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]
         : L["Monitoring:NeverUpdated"];
 
-// main
 }
 
 @section styles {
@@ -28,8 +32,13 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:TotalJobs"]</div>
+ codex/add-monitoringapplication-to-datasync-siqgy5
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobs</div>
+                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.MonitoringSummary.ActiveJobs]</div>
+
                     <div class="display-6 fw-bold">@Model.Summary.TotalJobs</div>
                     <div class="text-muted">@L["Monitoring:ActiveJobs", Model.Summary.ActiveJobs]</div>
+
                 </div>
             </div>
         </div>
@@ -37,42 +46,54 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobDetails"]</div>
+ codex/add-monitoringapplication-to-datasync-siqgy5
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobDetails</div>
+                    <div class="text-muted">@lastUpdatedText</div>
+
                     <div class="display-6 fw-bold">@Model.Summary.TotalJobDetails</div>
 // codex/add-monitoringapplication-to-datasync-gi4p0i
                     <div class="text-muted">@lastUpdatedText</div>
 
                     <div class="text-muted">@L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]</div>
-//main
+
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xxl">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-// codex/add-monitoringapplication-to-datasync-gi4p0i
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobGroups</div>
+                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
+
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
                     <div class="display-6 fw-bold">@Model.Summary.TotalJobGroups</div>
                     <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
-=======
+
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Units"]</div>
                     <div class="display-6 fw-bold">@Model.Summary.TotalUnits</div>
                     <div class="text-muted">@L["Monitoring:UnitsDescription"]</div>
-// main
+
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xxl">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-// codex/add-monitoringapplication-to-datasync-gi4p0i
+
+                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
+                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobRasteh</div>
+                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
+
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
                     <div class="display-6 fw-bold">@Model.Summary.TotalJobRasteh</div>
                     <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
-=======
+
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Posts"]</div>
                     <div class="display-6 fw-bold">@Model.Summary.TotalPosts</div>
                     <div class="text-muted">@L["Monitoring:PostsDescription"]</div>
-// main
+
                 </div>
             </div>
         </div>
@@ -94,12 +115,15 @@
                     <tr>
                         <th scope="col">@L["Monitoring:JobCode"]</th>
                         <th scope="col">@L["Monitoring:JobTitle"]</th>
-// codex/add-monitoringapplication-to-datasync-gi4p0i
+
+                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
+                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
+=======
                         <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
                         <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
                         <th scope="col">@L["Monitoring:JobGroup"]</th>
                         <th scope="col">@L["Monitoring:JobRasteh"]</th>
-// main
+
                         <th scope="col">@L["Monitoring:IsActive"]</th>
                         <th scope="col">@L["Monitoring:EffectiveFrom"]</th>
                         <th scope="col">@L["Monitoring:EffectiveTo"]</th>
@@ -109,7 +133,11 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    @if (!Model.MonitoringJobs.Any())
+=======
                     @if (!Model.Jobs.Any())
+
                     {
                         <tr>
                             <td colspan="10" class="text-center text-muted py-4">@L["Monitoring:NoJobs"]</td>
@@ -117,7 +145,11 @@
                     }
                     else
                     {
+
+                        foreach (var job in Model.MonitoringJobs)
+
                         foreach (var job in Model.Jobs)
+
                         {
                             var searchText = string.Join(" ", new[]
                             {

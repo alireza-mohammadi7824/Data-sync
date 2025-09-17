@@ -12,6 +12,9 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
 {
     private readonly ISqlRepository<Job> _jobRepository;
     private readonly ISqlRepository<JobDetail> _jobDetailRepository;
+// codex/add-monitoringapplication-to-datasync-siqgy5
+    private readonly ISqlRepository<JobGroup> _jobGroupRepository;
+    private readonly ISqlRepository<JobRasteh> _jobRastehRepository;
 
     // from codex/add-monitoringapplication-to-datasync-gi4p0i
     private readonly ISqlRepository<JobGroup> _jobGroupRepository;
@@ -21,24 +24,50 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
     private readonly ISqlRepository<Unit> _unitRepository;
     private readonly ISqlRepository<Post> _postRepository;
 
+//main
     public MonitoringAppService(
         ISqlRepository<Job> jobRepository,
         ISqlRepository<JobDetail> jobDetailRepository,
         ISqlRepository<JobGroup> jobGroupRepository,
+// codex/add-monitoringapplication-to-datasync-siqgy5
+        ISqlRepository<JobRasteh> jobRastehRepository)
+=======
         ISqlRepository<JobRasteh> jobRastehRepository,
         ISqlRepository<Unit> unitRepository,
         ISqlRepository<Post> postRepository)
+/// main
     {
         _jobRepository = jobRepository;
         _jobDetailRepository = jobDetailRepository;
         _jobGroupRepository = jobGroupRepository;
         _jobRastehRepository = jobRastehRepository;
+        codex/add-monitoringapplication-to-datasync-siqgy5
+
         _unitRepository = unitRepository;
         _postRepository = postRepository;
+// main
     }
 
     public async Task<MonitoringDashboardDto> GetDashboardAsync()
     {
+// codex/add-monitoringapplication-to-datasync-siqgy5
+        var jobQueryable = _jobRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobDetailQueryable = _jobDetailRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobGroupQueryable = _jobGroupRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobRastehQueryable = _jobRastehRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+=======
         // Queryables (با AsNoTracking برای کارایی بهتر dashboard)
         var jobQueryable = _jobRepository.GetQueryable().AsNoTracking();
         var jobDetailQueryable = _jobDetailRepository.GetQueryable().AsNoTracking();
@@ -48,11 +77,38 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
         var postQueryable = _postRepository.GetQueryable().AsNoTracking();
 
         // Summary با ادغام هر دو سمت
+// main
         var summary = new MonitoringSummaryDto
         {
             TotalJobs = await AsyncExecuter.CountAsync(jobQueryable),
             ActiveJobs = await AsyncExecuter.CountAsync(jobQueryable.Where(job => job.IsActive)),
             TotalJobDetails = await AsyncExecuter.CountAsync(jobDetailQueryable),
+// codex/add-monitoringapplication-to-datasync-siqgy5
+            TotalJobGroups = await AsyncExecuter.CountAsync(jobGroupQueryable),
+            TotalJobRasteh = await AsyncExecuter.CountAsync(jobRastehQueryable)
+        };
+
+        var jobs = await AsyncExecuter.ToListAsync(
+            jobDetailQueryable
+                .OrderByDescending(detail => detail.LastActivityTime)
+                .Take(100)
+                .Select(detail => new JobStatusDto
+                {
+                    Id = detail.Id,
+                    Code = detail.Code,
+                    Title = detail.Title,
+                    JobGroupTitle = detail.JobGroup != null ? detail.JobGroup.Title : null,
+                    JobRastehTitle = detail.JobRasteh != null ? detail.JobRasteh.Title : null,
+                    JobIsActive = detail.Job != null && detail.Job.IsActive,
+                    EffectiveFrom = ConvertOracleDate(detail.EffectiveDateFrom),
+                    EffectiveTo = ConvertOracleDate(detail.EffectiveDateTo),
+                    LastActivityTime = detail.LastActivityTime,
+                    StateTitle = detail.StateTitle,
+                    LastActionTitle = detail.LastActionTitle
+                })
+        );
+
+
 
             // from codex/add-monitoringapplication-to-datasync-gi4p0i
             TotalJobGroups = await AsyncExecuter.CountAsync(jobGroupQueryable),
@@ -90,7 +146,7 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
             })
             .ToList();
 
-        // نرمالایز زمان‌ها و محاسبه‌ی GeneratedAt بر اساس آخرین فعالیت (ترجیح به منطق دقیق‌تر)
+> main
         foreach (var job in jobs)
         {
             job.LastActivityTime = Clock.Normalize(job.LastActivityTime);
