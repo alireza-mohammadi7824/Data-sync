@@ -67,5 +67,11 @@
     "Monitoring:Status.Healthy": "سالم",
     "Monitoring:Status.Degraded": "کاهش‌یافته",
     "Monitoring:Status.Unhealthy": "ناسالم"
+    "Permission:Monitoring.View": "مشاهده پایش",
+    "Permission:Monitoring.Create": "ایجاد مورد پایش",
+    "Permission:Monitoring.Edit": "ویرایش مورد پایش",
+    "Permission:Monitoring.Delete": "حذف مورد پایش",
+    "Permission:Monitoring.RunCheck": "اجرای بررسی پایش",
+    "Menu:Monitoring": "پایش"
   }
 }

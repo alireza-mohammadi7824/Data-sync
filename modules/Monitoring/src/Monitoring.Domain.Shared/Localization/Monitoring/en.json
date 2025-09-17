@@ -67,5 +67,6 @@
     "Monitoring:Status.Healthy": "Healthy",
     "Monitoring:Status.Degraded": "Degraded",
     "Monitoring:Status.Unhealthy": "Unhealthy"
+   "Menu:Monitoring": "Monitoring"
   }
 }
