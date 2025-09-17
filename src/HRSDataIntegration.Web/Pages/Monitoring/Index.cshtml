@@ -10,18 +10,9 @@
 @{
     ViewBag.PageTitle = L["Monitoring:Title"];
     PageLayout.Content.MenuItemName = HRSDataIntegrationMenus.Monitoring;
-    var lastUpdatedText = Model.MonitoringSummary.GeneratedAt != default
-        ? L["Monitoring:LastUpdated", Model.MonitoringSummary.GeneratedAt.ToLocalTime().ToString("g")]
-        : L["Monitoring:NeverUpdated"];
-
-    var lastUpdatedText = Model.MonitoringSummary.GeneratedAt != default
-        ? L["Monitoring:LastUpdated", Model.MonitoringSummary.GeneratedAt.ToLocalTime().ToString("g")]
-        : L["Monitoring:NeverUpdated"];
-
     var lastUpdatedText = Model.Summary.GeneratedAt != default
         ? L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]
         : L["Monitoring:NeverUpdated"];
-
 }
 
 @section styles {
@@ -29,205 +20,66 @@
 }
 
 <div class="monitoring-dashboard container-fluid px-0">
-    <div class="row g-3">
-        <div class="col-12 col-md-6 col-xxl">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:TotalJobs"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobs</div>
-                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.MonitoringSummary.ActiveJobs]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobs</div>
-                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.MonitoringSummary.ActiveJobs]</div>
-
-                    <div class="display-6 fw-bold">@Model.Summary.TotalJobs</div>
-                    <div class="text-muted">@L["Monitoring:ActiveJobs", Model.Summary.ActiveJobs]</div>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-xxl">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobDetails"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobDetails</div>
-                    <div class="text-muted">@lastUpdatedText</div>
-
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobDetails</div>
-                    <div class="text-muted">@lastUpdatedText</div>
-
-                    <div class="display-6 fw-bold">@Model.Summary.TotalJobDetails</div>
-                    <div class="text-muted">@lastUpdatedText</div>
-
-                    <div class="text-muted">@L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]</div>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-xxl">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobGroups</div>
-                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
-
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobGroups</div>
-                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobGroups"]</div>
-                    <div class="display-6 fw-bold">@Model.Summary.TotalJobGroups</div>
-                    <div class="text-muted">@L["Monitoring:JobGroupsDescription"]</div>
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Units"]</div>
-                    <div class="display-6 fw-bold">@Model.Summary.TotalUnits</div>
-                    <div class="text-muted">@L["Monitoring:UnitsDescription"]</div>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-xxl">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobRasteh</div>
-                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
-=======
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
-                    <div class="display-6 fw-bold">@Model.MonitoringSummary.TotalJobRasteh</div>
-                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobRasteh"]</div>
-                    <div class="display-6 fw-bold">@Model.Summary.TotalJobRasteh</div>
-                    <div class="text-muted">@L["Monitoring:JobRastehDescription"]</div>
-
-                    <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:Posts"]</div>
-                    <div class="display-6 fw-bold">@Model.Summary.TotalPosts</div>
-                    <div class="text-muted">@L["Monitoring:PostsDescription"]</div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mt-4">
-        <div class="card-header d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div>
-                <h5 class="mb-0">@L["Monitoring:JobStatus"]</h5>
-                <div class="text-muted small">@L["Monitoring:JobStatusDescription"]</div>
+                <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:SummaryTotalServices"]</div>
+                <div class="display-6 fw-bold">@Model.Summary.TotalServices</div>
+                <div class="text-muted">@L["Monitoring:SummaryActiveServices", Model.Summary.ActiveServices]</div>
             </div>
-            <div class="ms-md-auto">
-                <input type="search" class="form-control" placeholder="@L["Monitoring:SearchJobs"]" data-monitoring-filter />
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="job-status-table">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">@L["Monitoring:JobCode"]</th>
-                        <th scope="col">@L["Monitoring:JobTitle"]</th>
-                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
-                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
-
-
-                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
-                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
-
-                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
-                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
-                        <th scope="col">@L["Monitoring:JobGroup"]</th>
-                        <th scope="col">@L["Monitoring:JobRasteh"]</th>
-
-                        <th scope="col">@L["Monitoring:IsActive"]</th>
-                        <th scope="col">@L["Monitoring:EffectiveFrom"]</th>
-                        <th scope="col">@L["Monitoring:EffectiveTo"]</th>
-                        <th scope="col">@L["Monitoring:LastActivity"]</th>
-                        <th scope="col">@L["Monitoring:State"]</th>
-                        <th scope="col">@L["Monitoring:LastAction"]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!Model.MonitoringJobs.Any())
-
-
-                    @if (!Model.MonitoringJobs.Any())
-
-                    @if (!Model.Jobs.Any())
-
-                    {
-                        <tr>
-                            <td colspan="10" class="text-center text-muted py-4">@L["Monitoring:NoJobs"]</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var job in Model.MonitoringJobs)
-
-
-                        foreach (var job in Model.MonitoringJobs)
-
-                        foreach (var job in Model.Jobs)
-
-                        {
-                            var searchText = string.Join(" ", new[]
-                            {
-                                job.Code.ToString(),
-                                job.Title ?? string.Empty,
-                                job.JobGroupTitle ?? string.Empty,
-                                job.JobRastehTitle ?? string.Empty,
-                                job.StateTitle ?? string.Empty,
-                                job.LastActionTitle ?? string.Empty
-                            }).ToLowerInvariant();
-                            <tr data-search-text="@searchText">
-                                <td class="fw-semibold">@job.Code</td>
-                                <td>
-                                    <div class="fw-semibold">@job.Title</div>
-                                    <div class="text-muted small">@job.StateTitle</div>
-                                </td>
-                                <td>@job.JobGroupTitle</td>
-                                <td>@job.JobRastehTitle</td>
-                                <td>
-                                    @if (job.JobIsActive)
-                                    {
-                                        <span class="badge bg-success-subtle text-success">@L["Monitoring:Active"]</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary-subtle text-secondary">@L["Monitoring:Inactive"]</span>
-                                    }
-                                </td>
-                                <td>@job.EffectiveFrom?.ToString("yyyy-MM-dd")</td>
-                                <td>@job.EffectiveTo?.ToString("yyyy-MM-dd")</td>
-                                <td>@job.LastActivityTime.ToLocalTime().ToString("g")</td>
-                                <td>@job.StateTitle</td>
-                                <td>@job.LastActionTitle</td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
+            <div class="text-muted">@lastUpdatedText</div>
         </div>
     </div>
-</div>
 
-@section scripts {
-    <script>
-        (function () {
-            const filterInput = document.querySelector('[data-monitoring-filter]');
-            if (!filterInput) {
-                return;
+    @if (!Model.Services.Any())
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h5 class="fw-semibold mb-3">@L["Monitoring:NoServicesTitle"]</h5>
+                <p class="text-muted mb-4">@L["Monitoring:NoServicesDescription"]</p>
+                <a class="btn btn-primary" href='@Url.Content("~/Monitoring/Services/Create")'>
+                    @L["Monitoring:CreateService"]
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var service in Model.Services)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0">@service.Name</h5>
+                                @if (service.IsActive)
+                                {
+                                    <span class="badge bg-success-subtle text-success">@L["Monitoring:ServiceActive"]</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">@L["Monitoring:ServiceInactive"]</span>
+                                }
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(service.Description))
+                            {
+                                <p class="text-muted mb-0">@service.Description</p>
+                            }
+                            <div class="text-muted small mt-auto">
+                                @if (service.LastCheckTime.HasValue)
+                                {
+                                    @L["Monitoring:ServiceLastCheck", service.LastCheckTime.Value.ToLocalTime().ToString("g")]
+                                }
+                                else
+                                {
+                                    @L["Monitoring:ServiceNeverChecked"]
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-
-            const rows = Array.from(document.querySelectorAll('#job-status-table tbody tr[data-search-text]'));
-            filterInput.addEventListener('input', function (event) {
-                const term = (event.target.value || '').toString().trim().toLowerCase();
-                rows.forEach(row => {
-                    const text = row.getAttribute('data-search-text');
-                    const visible = !term || (text && text.indexOf(term) > -1);
-                    row.style.display = visible ? '' : 'none';
-                });
-            });
-        })();
-    </script>
-}
+        </div>
+    }
+</div>
