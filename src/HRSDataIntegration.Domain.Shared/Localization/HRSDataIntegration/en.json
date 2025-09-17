@@ -4,61 +4,18 @@
     "AppName": "HRSDataIntegration",
     "Menu:Home": "Home",
     "Menu:Monitoring": "Monitoring",
-    "Monitoring:Title": "Monitoring dashboard",
-    "Monitoring:TotalJobs": "Jobs",
-    "Monitoring:ActiveJobs": "{0} active records",
-    "Monitoring:JobDetails": "Job details",
+    "Monitoring:Title": "Service monitoring",
+    "Monitoring:SummaryTotalServices": "Registered services",
+    "Monitoring:SummaryActiveServices": "{0} active services",
     "Monitoring:LastUpdated": "Updated {0}",
-
-    "Monitoring:JobGroups": "Job groups",
-    "Monitoring:JobGroupsDescription": "Distinct groups registered for positions",
-    "Monitoring:JobRasteh": "Job rasteh",
-    "Monitoring:JobRastehDescription": "Rasteh classifications available in the system",
-
-
-    "Monitoring:Units": "Units",
-    "Monitoring:UnitsDescription": "Organizational structure records",
-    "Monitoring:Posts": "Posts",
-    "Monitoring:PostsDescription": "Organizational post definitions",
-
-
-    "Monitoring:JobStatus": "Latest job activities",
-    "Monitoring:JobStatusDescription": "Tracking the most recent changes received from source systems.",
-    "Monitoring:SearchJobs": "Filter jobs...",
-    "Monitoring:JobCode": "Code",
-    "Monitoring:JobTitle": "Title",
-
-    "Monitoring:JobGroupColumn": "Group",
-    "Monitoring:JobRastehColumn": "Rasteh",
-=======
-
-    "Monitoring:JobGroupColumn": "Group",
-    "Monitoring:JobRastehColumn": "Rasteh",
-
-    "Monitoring:JobGroupColumn": "Group",
-    "Monitoring:JobRastehColumn": "Rasteh",
-
-    "Monitoring:JobGroup": "Group",
-    "Monitoring:JobRasteh": "Rasteh",
-
-
-    "Monitoring:IsActive": "Active",
-    "Monitoring:EffectiveFrom": "Effective from",
-    "Monitoring:EffectiveTo": "Effective to",
-    "Monitoring:LastActivity": "Last activity",
-    "Monitoring:State": "State",
-    "Monitoring:LastAction": "Last action",
-    "Monitoring:NoJobs": "No job activities have been received yet.",
-    "Monitoring:Active": "Active",
-    "Monitoring:Inactive": "Inactive",
     "Monitoring:NeverUpdated": "No activity recorded yet.",
-
-
-    "Monitoring:NeverUpdated": "No activity recorded yet.",
-
-    "Monitoring:NeverUpdated": "No activity recorded yet.",
-
-
+    "Monitoring:NoServicesTitle": "No services registered",
+    "Monitoring:NoServicesDescription": "Start by defining the integrations you want to observe.",
+    "Monitoring:CreateService": "Create service",
+    "Monitoring:ServiceActive": "Active",
+    "Monitoring:ServiceInactive": "Inactive",
+    "Monitoring:ServiceLastCheck": "Last check {0}",
+    "Monitoring:ServiceNeverChecked": "Not checked yet",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
     "Welcome": "Welcome"
   }
