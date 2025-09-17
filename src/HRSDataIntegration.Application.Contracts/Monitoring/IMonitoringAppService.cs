@@ -6,4 +6,6 @@ namespace HRSDataIntegration.Monitoring;
 public interface IMonitoringAppService : IApplicationService
 {
     Task<MonitoringDashboardDto> GetDashboardAsync();
+
+    Task<MonitoringServiceDto> CreateAsync(CreateMonitoringServiceDto input);
 }

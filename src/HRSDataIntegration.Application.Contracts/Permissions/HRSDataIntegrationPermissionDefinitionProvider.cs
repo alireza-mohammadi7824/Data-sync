@@ -9,10 +9,19 @@ public class HRSDataIntegrationPermissionDefinitionProvider : PermissionDefiniti
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(HRSDataIntegrationPermissions.GroupName);
+        var monitoringGroup = context.AddGroup(HRSDataIntegrationPermissions.GroupName);
 
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(HRSDataIntegrationPermissions.MyPermission1, L("Permission:MyPermission1"));
+        var monitoring = monitoringGroup.AddPermission(
+            HRSDataIntegrationPermissions.Monitoring.Default,
+            L("Permission:Monitoring"));
+
+        var services = monitoring.AddChild(
+            HRSDataIntegrationPermissions.Monitoring.Services.Default,
+            L("Permission:MonitoringServices"));
+
+        services.AddChild(
+            HRSDataIntegrationPermissions.Monitoring.Services.Create,
+            L("Permission:MonitoringServicesCreate"));
     }
 
     private static LocalizableString L(string name)
