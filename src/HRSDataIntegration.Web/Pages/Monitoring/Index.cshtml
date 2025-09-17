@@ -5,8 +5,11 @@
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
 @using Microsoft.AspNetCore.Mvc.Localization
 @using HRSDataIntegration.Localization
+@using HRSDataIntegration.Permissions
+@using Microsoft.AspNetCore.Authorization
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<HRSDataIntegrationResource> L
+@inject IAuthorizationService AuthorizationService
 @{
     ViewBag.PageTitle = L["Monitoring:Title"];
     PageLayout.Content.MenuItemName = HRSDataIntegrationMenus.Monitoring;
@@ -27,7 +30,15 @@
                 <div class="display-6 fw-bold">@Model.Summary.TotalServices</div>
                 <div class="text-muted">@L["Monitoring:SummaryActiveServices", Model.Summary.ActiveServices]</div>
             </div>
-            <div class="text-muted">@lastUpdatedText</div>
+            <div class="d-flex flex-column flex-md-row align-items-md-end gap-2 text-md-end">
+                <div class="text-muted">@lastUpdatedText</div>
+                @if (await AuthorizationService.IsGrantedAsync(HRSDataIntegrationPermissions.Monitoring.Services.Create))
+                {
+                    <a class="btn btn-primary" href='@Url.Content("~/Monitoring/Services/Create")'>
+                        @L["Monitoring:CreateService"]
+                    </a>
+                }
+            </div>
         </div>
     </div>
 
@@ -37,9 +48,12 @@
             <div class="card-body text-center py-5">
                 <h5 class="fw-semibold mb-3">@L["Monitoring:NoServicesTitle"]</h5>
                 <p class="text-muted mb-4">@L["Monitoring:NoServicesDescription"]</p>
-                <a class="btn btn-primary" href='@Url.Content("~/Monitoring/Services/Create")'>
-                    @L["Monitoring:CreateService"]
-                </a>
+                @if (await AuthorizationService.IsGrantedAsync(HRSDataIntegrationPermissions.Monitoring.Services.Create))
+                {
+                    <a class="btn btn-primary" href='@Url.Content("~/Monitoring/Services/Create")'>
+                        @L["Monitoring:CreateService"]
+                    </a>
+                }
             </div>
         </div>
     }
