@@ -8,7 +8,11 @@ public class IndexModel : HRSDataIntegrationPageModel
 {
     private readonly IMonitoringAppService _monitoringAppService;
 
+// codex/add-monitoringapplication-to-datasync-gi4p0i
     public MonitoringDashboardDto Dashboard { get; private set; } = new();
+
+    public MonitoringDashboardDto Dashboard { get; private set; }
+// main
 
     public MonitoringSummaryDto Summary => Dashboard?.Summary ?? new MonitoringSummaryDto();
 
@@ -21,6 +25,10 @@ public class IndexModel : HRSDataIntegrationPageModel
 
     public async Task OnGetAsync()
     {
+// codex/add-monitoringapplication-to-datasync-gi4p0i
         Dashboard = await _monitoringAppService.GetDashboardAsync() ?? new MonitoringDashboardDto();
+
+        Dashboard = await _monitoringAppService.GetDashboardAsync();
+// main
     }
 }
