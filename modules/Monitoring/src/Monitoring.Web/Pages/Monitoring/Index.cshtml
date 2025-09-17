@@ -1,0 +1,6 @@
+@page "/Monitoring"
+@using Monitoring.Permissions
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(MonitoringPermissions.Default)]
+
+<h1>Monitoring</h1>
