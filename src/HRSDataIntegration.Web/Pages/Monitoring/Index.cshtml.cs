@@ -8,7 +8,7 @@ public class IndexModel : HRSDataIntegrationPageModel
 {
     private readonly IMonitoringAppService _monitoringAppService;
 
-    public MonitoringDashboardDto Dashboard { get; private set; }
+    public MonitoringDashboardDto Dashboard { get; private set; } = new();
 
     public MonitoringSummaryDto Summary => Dashboard?.Summary ?? new MonitoringSummaryDto();
 
@@ -21,6 +21,6 @@ public class IndexModel : HRSDataIntegrationPageModel
 
     public async Task OnGetAsync()
     {
-        Dashboard = await _monitoringAppService.GetDashboardAsync();
+        Dashboard = await _monitoringAppService.GetDashboardAsync() ?? new MonitoringDashboardDto();
     }
 }

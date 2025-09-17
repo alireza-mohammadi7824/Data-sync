@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,10 +29,21 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
 
     public async Task<MonitoringDashboardDto> GetDashboardAsync()
     {
-        var jobQueryable = _jobRepository.GetQueryable();
-        var jobDetailQueryable = _jobDetailRepository.GetQueryable();
-        var jobGroupQueryable = _jobGroupRepository.GetQueryable();
-        var jobRastehQueryable = _jobRastehRepository.GetQueryable();
+        var jobQueryable = _jobRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobDetailQueryable = _jobDetailRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobGroupQueryable = _jobGroupRepository
+            .GetQueryable()
+            .AsNoTracking();
+
+        var jobRastehQueryable = _jobRastehRepository
+            .GetQueryable()
+            .AsNoTracking();
 
         var summary = new MonitoringSummaryDto
         {
@@ -39,35 +51,38 @@ public class MonitoringAppService : HRSDataIntegrationAppService, IMonitoringApp
             ActiveJobs = await AsyncExecuter.CountAsync(jobQueryable.Where(job => job.IsActive)),
             TotalJobDetails = await AsyncExecuter.CountAsync(jobDetailQueryable),
             TotalJobGroups = await AsyncExecuter.CountAsync(jobGroupQueryable),
-            TotalJobRasteh = await AsyncExecuter.CountAsync(jobRastehQueryable),
-            GeneratedAt = Clock.Now
+            TotalJobRasteh = await AsyncExecuter.CountAsync(jobRastehQueryable)
         };
 
-        var jobDetails = await AsyncExecuter.ToListAsync(
+        var jobs = await AsyncExecuter.ToListAsync(
             jobDetailQueryable
-                .Include(detail => detail.Job)
-                .Include(detail => detail.JobGroup)
-                .Include(detail => detail.JobRasteh)
                 .OrderByDescending(detail => detail.LastActivityTime)
                 .Take(100)
+                .Select(detail => new JobStatusDto
+                {
+                    Id = detail.Id,
+                    Code = detail.Code,
+                    Title = detail.Title,
+                    JobGroupTitle = detail.JobGroup != null ? detail.JobGroup.Title : null,
+                    JobRastehTitle = detail.JobRasteh != null ? detail.JobRasteh.Title : null,
+                    JobIsActive = detail.Job != null && detail.Job.IsActive,
+                    EffectiveFrom = ConvertOracleDate(detail.EffectiveDateFrom),
+                    EffectiveTo = ConvertOracleDate(detail.EffectiveDateTo),
+                    LastActivityTime = detail.LastActivityTime,
+                    StateTitle = detail.StateTitle,
+                    LastActionTitle = detail.LastActionTitle
+                })
         );
 
-        var jobs = jobDetails
-            .Select(detail => new JobStatusDto
-            {
-                Id = detail.Id,
-                Code = detail.Code,
-                Title = detail.Title,
-                JobGroupTitle = detail.JobGroup?.Title,
-                JobRastehTitle = detail.JobRasteh?.Title,
-                JobIsActive = detail.Job?.IsActive ?? false,
-                EffectiveFrom = ConvertOracleDate(detail.EffectiveDateFrom),
-                EffectiveTo = ConvertOracleDate(detail.EffectiveDateTo),
-                LastActivityTime = detail.LastActivityTime,
-                StateTitle = detail.StateTitle,
-                LastActionTitle = detail.LastActionTitle
-            })
-            .ToList();
+        foreach (var job in jobs)
+        {
+            job.LastActivityTime = Clock.Normalize(job.LastActivityTime);
+        }
+
+        var latestActivity = jobs.FirstOrDefault()?.LastActivityTime;
+        summary.GeneratedAt = latestActivity.HasValue && latestActivity.Value != default
+            ? Clock.Normalize(latestActivity.Value)
+            : Clock.Normalize(Clock.Now);
 
         return new MonitoringDashboardDto
         {

@@ -10,7 +10,9 @@
 @{
     ViewBag.PageTitle = L["Monitoring:Title"];
     PageLayout.Content.MenuItemName = HRSDataIntegrationMenus.Monitoring;
-    var lastUpdated = Model.Summary.GeneratedAt.ToLocalTime().ToString("g");
+    var lastUpdatedText = Model.Summary.GeneratedAt != default
+        ? L["Monitoring:LastUpdated", Model.Summary.GeneratedAt.ToLocalTime().ToString("g")]
+        : L["Monitoring:NeverUpdated"];
 }
 
 @section styles {
@@ -33,7 +35,7 @@
                 <div class="card-body">
                     <div class="text-muted text-uppercase fw-semibold small">@L["Monitoring:JobDetails"]</div>
                     <div class="display-6 fw-bold">@Model.Summary.TotalJobDetails</div>
-                    <div class="text-muted">@L["Monitoring:LastUpdated", lastUpdated]</div>
+                    <div class="text-muted">@lastUpdatedText</div>
                 </div>
             </div>
         </div>
@@ -73,8 +75,8 @@
                     <tr>
                         <th scope="col">@L["Monitoring:JobCode"]</th>
                         <th scope="col">@L["Monitoring:JobTitle"]</th>
-                        <th scope="col">@L["Monitoring:JobGroup"]</th>
-                        <th scope="col">@L["Monitoring:JobRasteh"]</th>
+                        <th scope="col">@L["Monitoring:JobGroupColumn"]</th>
+                        <th scope="col">@L["Monitoring:JobRastehColumn"]</th>
                         <th scope="col">@L["Monitoring:IsActive"]</th>
                         <th scope="col">@L["Monitoring:EffectiveFrom"]</th>
                         <th scope="col">@L["Monitoring:EffectiveTo"]</th>
