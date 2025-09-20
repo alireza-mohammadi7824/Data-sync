@@ -1,0 +1,119 @@
+@page "/Monitoring"
+@model Monitoring.Web.Pages.Monitoring.IndexModel
+@using System.Linq
+@using Monitoring.Localization
+@using Monitoring.Menus
+@using Monitoring.Permissions
+@inject Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer<MonitoringResource> L
+
+@{
+    Layout = null;
+}
+
+@section scripts {
+    <script>
+        (function () {
+            const refreshIntervalMs = 30000;
+
+            setInterval(function () {
+                window.location.reload();
+            }, refreshIntervalMs);
+        })();
+    </script>
+}
+
+@section main {
+    @{ ViewData["Title"] = L["Monitoring:Title"]; }
+
+    <abp-breadcrumb>
+        <abp-breadcrumb-item href="~/Monitoring">@L["Monitoring:Title"]</abp-breadcrumb-item>
+    </abp-breadcrumb>
+
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <h1 class="mb-0">@L["Monitoring:Heading"]</h1>
+            <p class="text-muted mb-0">@L["Monitoring:Subheading"]</p>
+        </div>
+        <abp-authorize policy="@MonitoringPermissions.Create">
+            <abp-button button-type="Primary"
+                        text="@L[\"Monitoring:CreateService\"]"
+                        href="~/Monitoring/Services/Create"
+                        icon="plus" />
+        </abp-authorize>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">@L["Monitoring:Table.Name"]</th>
+                        <th scope="col">@L["Monitoring:Table.Type"]</th>
+                        <th scope="col">@L["Monitoring:Table.Target"]</th>
+                        <th scope="col">@L["Monitoring:Table.Enabled"]</th>
+                        <th scope="col">@L["Monitoring:Table.LastStatus"]</th>
+                        <th scope="col">@L["Monitoring:Table.LastCheck"]</th>
+                        <th scope="col" class="text-end">@L["Monitoring:Table.Actions"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (!Model.Endpoints.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-5">@L["Monitoring:Table.Empty"]</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var endpoint in Model.Endpoints)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">@endpoint.Name</div>
+                                @if (!string.IsNullOrWhiteSpace(endpoint.Description))
+                                {
+                                    <div class="text-muted small">@endpoint.Description</div>
+                                }
+                            </td>
+                            <td>@Model.GetServiceTypeText(endpoint.ServiceType)</td>
+                            <td class="text-break">@endpoint.Target</td>
+                            <td>@Model.GetEnabledText(endpoint.IsEnabled)</td>
+                            <td>
+                                <span class="badge @Model.GetStatusBadgeClass(endpoint.LastKnownStatus)">
+                                    @Model.GetStatusText(endpoint.LastKnownStatus)
+                                </span>
+                            </td>
+                            <td>
+                                @if (endpoint.LastCheckTime.HasValue)
+                                {
+                                    @endpoint.LastCheckTime.Value.ToLocalTime().ToString("g")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">@L["Monitoring:NeverChecked"]</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       asp-page="/Monitoring/Services/Detail"
+                                       asp-route-id="@endpoint.Id">
+                                        @L["Monitoring:Actions.View"]
+                                    </a>
+                                    <abp-authorize policy="@MonitoringPermissions.Edit">
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           asp-page="/Monitoring/Services/Edit"
+                                           asp-route-id="@endpoint.Id">
+                                            @L["Monitoring:Actions.Edit"]
+                                        </a>
+                                    </abp-authorize>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
