@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Monitoring.Localization;
 using Volo.Abp.Application;
+using Volo.Abp.AspNetCore.Mvc.Localization;
+using Volo.Abp.Localization;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Localization;
 using Volo.Abp.Application;

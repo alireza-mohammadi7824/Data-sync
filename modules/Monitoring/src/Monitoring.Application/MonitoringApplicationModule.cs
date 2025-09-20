@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Monitoring.BackgroundWorkers;
 using Monitoring.Options;
+using Volo.Abp;
+using Volo.Abp.Application;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.BackgroundWorkers;
@@ -28,6 +32,7 @@ public class MonitoringApplicationModule : AbpModule
         context.Services.AddOptions<MonitoringOptions>().BindConfiguration("Monitoring");
         context.Services.AddHttpClient("Monitoring", client =>
         {
+            client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
             client.Timeout = Timeout.InfiniteTimeSpan;
         });
 
