@@ -11,6 +11,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace Monitoring;
 
 [DependsOn(
+    typeof(AbpAuthorizationModule)
     typeof(AbpDddDomainSharedModule),
     typeof(AbpAuthorizationModule)
     typeof(AbpDddDomainSharedModule)

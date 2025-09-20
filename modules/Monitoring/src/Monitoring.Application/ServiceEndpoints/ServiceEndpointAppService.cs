@@ -61,6 +61,7 @@ public class ServiceEndpointAppService : CrudAppService<
     protected override async Task<ServiceEndpoint> GetEntityByIdAsync(Guid id)
     {
         var queryable = await GetQueryableWithDetailsAsync();
+        var entity = await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(x => x.Id == id));
 
         var entity = await queryable.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null)

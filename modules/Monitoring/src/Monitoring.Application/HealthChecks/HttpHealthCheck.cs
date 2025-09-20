@@ -38,6 +38,10 @@ public class HttpHealthCheck : IHealthCheckStrategy, IProvidesResultCode
             var expectedStatus = endpoint.GetProperty<int?>(ExpectedStatusCodePropertyName) ?? 200;
 
             var client = _httpClientFactory.CreateClient("Monitoring");
+            var timeout = endpoint.TimeoutSeconds > 0
+                ? TimeSpan.FromSeconds(endpoint.TimeoutSeconds)
+                : TimeSpan.FromSeconds(ServiceEndpointConsts.MinTimeoutSeconds);
+            client.Timeout = timeout;
             client.Timeout = Timeout.InfiniteTimeSpan;
 
             var stopwatch = Stopwatch.StartNew();

@@ -18,6 +18,7 @@ using Volo.Abp.Modularity;
 namespace Monitoring;
 
 [DependsOn(
+    typeof(AbpApplicationModule),
     typeof(AbpDddApplicationModule),
     typeof(AbpAutoMapperModule),
     typeof(AbpBackgroundWorkersModule),
@@ -32,6 +33,7 @@ public class MonitoringApplicationModule : AbpModule
         context.Services.AddOptions<MonitoringOptions>().BindConfiguration("Monitoring");
         context.Services.AddHttpClient("Monitoring", client =>
         {
+            client.Timeout = TimeSpan.FromMinutes(5);
             client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
             client.Timeout = Timeout.InfiniteTimeSpan;
         });

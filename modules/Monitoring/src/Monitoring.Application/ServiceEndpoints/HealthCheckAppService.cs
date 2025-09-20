@@ -1,4 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Monitoring.Permissions;
+using Volo.Abp;
+using Volo.Abp.Application.Services;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +32,6 @@ public class HealthCheckAppService : ApplicationService, IHealthCheckAppService
     private readonly IRepository<ServiceStatusSnapshot, Guid> _statusSnapshotRepository;
     private readonly HealthCheckExecutor _executor;
     private readonly IReadOnlyDictionary<MonitoringServiceType, IHealthCheckStrategy> _strategies;
-
     public HealthCheckAppService(
         IRepository<ServiceEndpoint, Guid> serviceEndpointRepository,
         IRepository<ServiceStatusSnapshot, Guid> statusSnapshotRepository,
@@ -121,6 +127,16 @@ public class HealthCheckAppService : ApplicationService
         var clampedTake = take <= 0 ? 100 : Math.Min(take, 500);
 
         var queryable = await _statusSnapshotRepository.GetQueryableAsync();
+        var query = queryable
+            .Where(x => x.ServiceEndpointId == id)
+            .OrderByDescending(x => x.CheckedAt)
+            .ThenByDescending(x => x.Id)
+            .Take(clampedTake);
+
+        var snapshots = await AsyncExecuter.ToListAsync(query);
+
+        return ObjectMapper.Map<List<ServiceStatusSnapshot>, List<ServiceStatusSnapshotDto>>(snapshots);
+    }
         var snapshots = await queryable
             .Where(x => x.ServiceEndpointId == id)
             .OrderByDescending(x => x.CheckedAt)
