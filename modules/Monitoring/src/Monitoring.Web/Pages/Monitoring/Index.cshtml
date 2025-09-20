@@ -79,6 +79,7 @@
                             <td class="text-break">@endpoint.Target</td>
                             <td>@Model.GetEnabledText(endpoint.IsEnabled)</td>
                             <td>
+                                <span class="@Model.GetStatusBadgeClass(endpoint.LastKnownStatus)">
                                 <span class="badge @Model.GetStatusBadgeClass(endpoint.LastKnownStatus)">
                                     @Model.GetStatusText(endpoint.LastKnownStatus)
                                 </span>

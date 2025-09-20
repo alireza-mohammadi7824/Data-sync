@@ -66,6 +66,8 @@ public class EditModel : MonitoringPageModel
 
         await _serviceEndpointAppService.UpdateAsync(Id, Service);
 
+        await Notify.SuccessAsync(L["Monitoring:ToastUpdateSuccess", Service.Name]);
+
         return RedirectToPage("/Monitoring/Services/Detail", new { Id });
     }
 

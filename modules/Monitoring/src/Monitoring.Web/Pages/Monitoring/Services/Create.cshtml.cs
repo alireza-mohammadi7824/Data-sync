@@ -49,6 +49,8 @@ public class CreateModel : MonitoringPageModel
 
         await _serviceEndpointAppService.CreateAsync(Service);
 
+        await Notify.SuccessAsync(L["Monitoring:ToastCreateSuccess", Service.Name]);
+
         return RedirectToPage("/Monitoring/Index");
     }
 

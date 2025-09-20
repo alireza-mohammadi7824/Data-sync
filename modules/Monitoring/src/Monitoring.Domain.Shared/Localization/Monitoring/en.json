@@ -24,6 +24,12 @@
     "Monitoring:ServiceDetailsTitle": "Service details - {0}",
     "Monitoring:ServiceDetailsHeading": "Details for {0}",
     "Monitoring:ServiceDetailsDescription": "Review current status and configuration for this service.",
+    "Monitoring:ToastCreateSuccess": "Service '{0}' has been created successfully.",
+    "Monitoring:ToastUpdateSuccess": "Service '{0}' has been updated successfully.",
+    "Monitoring:ToastDeleteSuccess": "Service '{0}' has been deleted successfully.",
+    "Monitoring:DeleteConfirmationTitle": "Delete service",
+    "Monitoring:DeleteConfirmationMessage": "Are you sure you want to delete '{0}'? This action cannot be undone.",
+    "Monitoring:DeleteFailure": "Failed to delete the service endpoint.",
     "Monitoring:HistoryHeading": "Recent history",
     "Monitoring:HistoryPlaceholder": "Status history will appear here once health checks have been executed.",
     "Monitoring:HistoryTable.Status": "Status",
@@ -64,6 +70,7 @@
     "Monitoring:TargetHint.Tcp": "Provide the host and port (e.g. host:port) for the TCP service.",
     "Monitoring:Actions.View": "View",
     "Monitoring:Actions.Edit": "Edit",
+    "Monitoring:Actions.Delete": "Delete",
     "Monitoring:Yes": "Yes",
     "Monitoring:No": "No",
     "Monitoring:SecondsFormat": "{0} seconds",
@@ -75,6 +82,15 @@
     "Monitoring:Status.Unknown": "Unknown",
     "Monitoring:Status.Healthy": "Healthy",
     "Monitoring:Status.Degraded": "Degraded",
+    "Monitoring:Status.Unhealthy": "Unhealthy",
+    "Monitoring:Validation.Name.Required": "The {0} field is required.",
+    "Monitoring:Validation.Name.Length": "The {0} field must be at most {1} characters.",
+    "Monitoring:Validation.Description.Length": "The {0} field must be at most {1} characters.",
+    "Monitoring:Validation.ServiceType.Required": "Please select a service type.",
+    "Monitoring:Validation.Target.Required": "The {0} field is required.",
+    "Monitoring:Validation.Target.Length": "The {0} field must be at most {1} characters.",
+    "Monitoring:Validation.CheckIntervalSeconds.Range": "The {0} field must be at least {1} seconds.",
+    "Monitoring:Validation.TimeoutSeconds.Range": "The {0} field must be at least {1} seconds."
     "Monitoring:Status.Unhealthy": "Unhealthy"
    "Menu:Monitoring": "Monitoring"
   }

@@ -50,6 +50,10 @@ public class IndexModel : MonitoringPageModel
     {
         return status switch
         {
+            MonitoringStatus.Healthy => "badge bg-success-subtle text-success",
+            MonitoringStatus.Degraded => "badge bg-warning-subtle text-warning",
+            MonitoringStatus.Unhealthy => "badge bg-danger-subtle text-danger",
+            _ => "badge bg-secondary-subtle text-secondary"
             MonitoringStatus.Healthy => "bg-success-subtle text-success",
             MonitoringStatus.Degraded => "bg-warning-subtle text-warning",
             MonitoringStatus.Unhealthy => "bg-danger-subtle text-danger",

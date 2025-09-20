@@ -39,6 +39,12 @@
                             href="~/Monitoring/Services/Edit/@Model.Id"
                             icon="edit" />
             </abp-authorize>
+            <abp-authorize policy="@MonitoringPermissions.Delete">
+                <abp-button button-type="OutlineDanger"
+                            id="delete-endpoint-button"
+                            text="@L[\"Monitoring:Actions.Delete\"]"
+                            icon="trash" />
+            </abp-authorize>
         </div>
     </div>
 
@@ -150,6 +156,7 @@
     <script>
         (function () {
             const runCheckButton = document.getElementById('run-check-button');
+            const deleteButton = document.getElementById('delete-endpoint-button');
             const historyBody = document.getElementById('history-body');
             const statusTexts = @Html.Raw(JsonSerializer.Serialize(Model.StatusTextLookup));
             const statusBadges = @Html.Raw(JsonSerializer.Serialize(Model.StatusBadgeLookup));
@@ -160,6 +167,13 @@
             const runCheckFailure = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:RunCheckFailure"].Value));
             const neverCheckedText = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:NeverChecked"].Value));
             const runCheckUrl = '@Url.Page(null, "RunCheck", new { id = Model.Id })';
+            const deleteConfirmTitle = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:DeleteConfirmationTitle"].Value));
+            const deleteConfirmMessageTemplate = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:DeleteConfirmationMessage"].Value));
+            const deleteSuccessTemplate = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:ToastDeleteSuccess"].Value));
+            const deleteFailureMessage = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:DeleteFailure"].Value));
+            const deleteUrl = '@Url.Page(null, "Delete", new { id = Model.Id })';
+            const indexUrl = '@Url.Page("/Monitoring/Index")';
+            const endpointName = @Html.Raw(JsonSerializer.Serialize(Model.Endpoint.Name ?? string.Empty));
 
             const lastStatusBadge = document.getElementById('last-status-badge');
             const lastCheckTime = document.getElementById('last-check-time');
@@ -280,6 +294,34 @@
             }
 
             runCheckButton?.addEventListener('click', runCheck);
+
+            deleteButton?.addEventListener('click', async () => {
+                const message = abp.utils.formatString(deleteConfirmMessageTemplate, endpointName);
+                const confirmed = await abp.message.confirm(message, deleteConfirmTitle);
+
+                if (!confirmed) {
+                    return;
+                }
+
+                try {
+                    await abp.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        headers: {
+                            [abp.security.antiForgery.tokenHeaderName]: abp.security.antiForgery.getToken()
+                        }
+                    });
+
+                    const successMessage = abp.utils.formatString(deleteSuccessTemplate, endpointName);
+                    abp.notify.success(successMessage);
+                    window.location.href = indexUrl;
+                } catch (error) {
+                    abp.notify.error(deleteFailureMessage);
+                }
+            });
+        })();
+    </script>
+}
         })();
     </script>
 }

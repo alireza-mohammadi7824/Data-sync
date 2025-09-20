@@ -61,6 +61,12 @@ public class DetailModel : MonitoringPageModel
         });
     }
 
+    [Authorize(MonitoringPermissions.Delete)]
+    public virtual async Task<IActionResult> OnPostDeleteAsync()
+    {
+        await _serviceEndpointAppService.DeleteAsync(Id);
+
+        return NoContent();
         return Page();
     }
 

@@ -31,7 +31,8 @@ public class ServiceEndpointRepository : EfCoreRepository<MonitoringDbContext, S
             .Where(endpoint => endpoint.LastCheckTime == null ||
                                EF.Functions.DateDiffSecond(endpoint.LastCheckTime.Value, utcNow) >= endpoint.CheckIntervalSeconds)
             .ToListAsync(cancellationToken);
-    public virtual Task<IReadOnlyList<ServiceEndpoint>> GetDueForCheckAsync(
+
+public virtual Task<IReadOnlyList<ServiceEndpoint>> GetDueForCheckAsync(
         DateTime utcNow,
         CancellationToken cancellationToken = default)
     {
