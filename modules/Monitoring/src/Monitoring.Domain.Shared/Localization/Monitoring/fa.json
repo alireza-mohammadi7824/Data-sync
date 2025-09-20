@@ -41,6 +41,7 @@
     "Monitoring:RunCheckNow": "اجرای بررسی",
     "Monitoring:RunCheckSuccess": "بررسی سلامت با وضعیت {0} انجام شد.",
     "Monitoring:RunCheckFailure": "اجرای بررسی سلامت با خطا مواجه شد.",
+    "Monitoring:RunCheckNow": "اجرای بررسی",
     "Monitoring:Cancel": "انصراف",
     "Monitoring:Save": "ذخیره",
     "Monitoring:Table.Name": "نام",
@@ -90,5 +91,12 @@
     "Monitoring:Validation.Target.Length": "طول فیلد {0} باید حداکثر {1} کاراکتر باشد.",
     "Monitoring:Validation.CheckIntervalSeconds.Range": "مقدار فیلد {0} باید حداقل {1} ثانیه باشد.",
     "Monitoring:Validation.TimeoutSeconds.Range": "مقدار فیلد {0} باید حداقل {1} ثانیه باشد."
+    "Monitoring:Status.Unhealthy": "ناسالم"
+    "Permission:Monitoring.View": "مشاهده پایش",
+    "Permission:Monitoring.Create": "ایجاد مورد پایش",
+    "Permission:Monitoring.Edit": "ویرایش مورد پایش",
+    "Permission:Monitoring.Delete": "حذف مورد پایش",
+    "Permission:Monitoring.RunCheck": "اجرای بررسی پایش",
+    "Menu:Monitoring": "پایش"
   }
 }

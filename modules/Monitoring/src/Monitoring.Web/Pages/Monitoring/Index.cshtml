@@ -80,6 +80,7 @@
                             <td>@Model.GetEnabledText(endpoint.IsEnabled)</td>
                             <td>
                                 <span class="@Model.GetStatusBadgeClass(endpoint.LastKnownStatus)">
+                                <span class="badge @Model.GetStatusBadgeClass(endpoint.LastKnownStatus)">
                                     @Model.GetStatusText(endpoint.LastKnownStatus)
                                 </span>
                             </td>
@@ -117,3 +118,8 @@
         </div>
     </div>
 }
+@using Monitoring.Permissions
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(MonitoringPermissions.Default)]
+
+<h1>Monitoring</h1>
