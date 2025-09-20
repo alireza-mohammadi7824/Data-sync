@@ -34,6 +34,9 @@ public class DetailModel : MonitoringPageModel
     {
         _serviceEndpointAppService = serviceEndpointAppService;
         _healthCheckAppService = healthCheckAppService;
+    public DetailModel(IServiceEndpointAppService serviceEndpointAppService)
+    {
+        _serviceEndpointAppService = serviceEndpointAppService;
     }
 
     public virtual async Task<IActionResult> OnGetAsync()
@@ -64,6 +67,7 @@ public class DetailModel : MonitoringPageModel
         await _serviceEndpointAppService.DeleteAsync(Id);
 
         return NoContent();
+        return Page();
     }
 
     public string GetServiceTypeText(MonitoringServiceType serviceType)

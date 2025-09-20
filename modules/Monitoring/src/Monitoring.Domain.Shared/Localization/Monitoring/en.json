@@ -41,6 +41,7 @@
     "Monitoring:RunCheckNow": "Run check now",
     "Monitoring:RunCheckSuccess": "Health check completed with status {0}.",
     "Monitoring:RunCheckFailure": "Failed to execute the health check.",
+    "Monitoring:RunCheckNow": "Run check now",
     "Monitoring:Cancel": "Cancel",
     "Monitoring:Save": "Save",
     "Monitoring:Table.Name": "Name",
@@ -90,5 +91,7 @@
     "Monitoring:Validation.Target.Length": "The {0} field must be at most {1} characters.",
     "Monitoring:Validation.CheckIntervalSeconds.Range": "The {0} field must be at least {1} seconds.",
     "Monitoring:Validation.TimeoutSeconds.Range": "The {0} field must be at least {1} seconds."
+    "Monitoring:Status.Unhealthy": "Unhealthy"
+   "Menu:Monitoring": "Monitoring"
   }
 }

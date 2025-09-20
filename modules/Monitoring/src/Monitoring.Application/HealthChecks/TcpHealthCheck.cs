@@ -31,6 +31,9 @@ public class TcpHealthCheck : IHealthCheckStrategy
         {
             var stopwatch = Stopwatch.StartNew();
             await _tcpConnector.ConnectAsync(host, port, cancellationToken);
+            using var client = new TcpClient();
+            var stopwatch = Stopwatch.StartNew();
+            await client.ConnectAsync(host, port, cancellationToken);
             stopwatch.Stop();
 
             var responseTime = (int)Math.Round(stopwatch.Elapsed.TotalMilliseconds);
