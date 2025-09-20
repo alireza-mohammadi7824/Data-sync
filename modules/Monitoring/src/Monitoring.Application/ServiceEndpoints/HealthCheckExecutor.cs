@@ -1,80 +1,56 @@
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Monitoring.Permissions;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Monitoring.Enums;
-using Monitoring.Permissions;
 using Monitoring.ServiceEndpoints.HealthChecks;
 using Volo.Abp;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Authorization;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Guids;
+using Volo.Abp.Timing;
 
 namespace Monitoring.ServiceEndpoints;
 
-[Authorize(MonitoringPermissions.Default)]
-public class HealthCheckAppService : ApplicationService, IHealthCheckAppService
+public class HealthCheckExecutor : ITransientDependency
 {
     private readonly IRepository<ServiceEndpoint, Guid> _serviceEndpointRepository;
     private readonly IRepository<ServiceStatusSnapshot, Guid> _statusSnapshotRepository;
-    private readonly HealthCheckExecutor _executor;
     private readonly IReadOnlyDictionary<MonitoringServiceType, IHealthCheckStrategy> _strategies;
+    private readonly IClock _clock;
+    private readonly IGuidGenerator _guidGenerator;
 
-    public HealthCheckAppService(
+    public HealthCheckExecutor(
         IRepository<ServiceEndpoint, Guid> serviceEndpointRepository,
         IRepository<ServiceStatusSnapshot, Guid> statusSnapshotRepository,
-        HealthCheckExecutor executor)
+        IEnumerable<IHealthCheckStrategy> strategies,
+        IClock clock,
+        IGuidGenerator guidGenerator)
     {
         _serviceEndpointRepository = serviceEndpointRepository;
         _statusSnapshotRepository = statusSnapshotRepository;
-        _executor = executor;
-        IEnumerable<IHealthCheckStrategy> strategies)
-    {
-        _serviceEndpointRepository = serviceEndpointRepository;
-        _statusSnapshotRepository = statusSnapshotRepository;
+        _clock = clock;
+        _guidGenerator = guidGenerator;
         _strategies = BuildStrategyMap(strategies);
-public class HealthCheckAppService : ApplicationService
-{
-    private readonly IRepository<ServiceEndpoint, Guid> _serviceEndpointRepository;
-    private readonly IRepository<ServiceStatusSnapshot, Guid> _statusSnapshotRepository;
-
-    public HealthCheckAppService(
-        IRepository<ServiceEndpoint, Guid> serviceEndpointRepository,
-        IRepository<ServiceStatusSnapshot, Guid> statusSnapshotRepository)
-    {
-        _serviceEndpointRepository = serviceEndpointRepository;
-        _statusSnapshotRepository = statusSnapshotRepository;
     }
 
-    [Authorize(MonitoringPermissions.RunCheck)]
-    public virtual async Task<RunCheckResultDto> RunCheckAsync(Guid id)
+    public virtual async Task<ServiceStatusSnapshot> ExecuteAsync(ServiceEndpoint endpoint, CancellationToken cancellationToken = default)
     {
-        var endpoint = await _serviceEndpointRepository.GetAsync(id);
-        var snapshot = await _executor.ExecuteAsync(endpoint);
-
-        return ObjectMapper.Map<ServiceStatusSnapshot, RunCheckResultDto>(snapshot);
         var strategy = GetStrategy(endpoint.ServiceType);
-        var now = Clock.Now;
-
         var timeout = endpoint.TimeoutSeconds > 0
             ? TimeSpan.FromSeconds(endpoint.TimeoutSeconds)
             : TimeSpan.FromSeconds(ServiceEndpointConsts.MinTimeoutSeconds);
 
-        (MonitoringStatus status, int? responseTimeMs, string message) executionResult;
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(timeout);
 
-        using var cancellationTokenSource = new CancellationTokenSource(timeout);
+        (MonitoringStatus status, int? responseTimeMs, string message) executionResult;
 
         try
         {
-            executionResult = await strategy.CheckAsync(endpoint, cancellationTokenSource.Token);
+            executionResult = await strategy.CheckAsync(endpoint, timeoutCts.Token);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             executionResult = (MonitoringStatus.Unhealthy, null, "The health check timed out.");
         }
@@ -83,6 +59,12 @@ public class HealthCheckAppService : ApplicationService
             executionResult = (MonitoringStatus.Unhealthy, null, $"Health check failed: {ex.Message}");
         }
 
+        if (cancellationToken.IsCancellationRequested)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        var now = _clock.Now;
         var duration = executionResult.responseTimeMs.HasValue
             ? TimeSpan.FromMilliseconds(executionResult.responseTimeMs.Value)
             : (TimeSpan?)null;
@@ -91,7 +73,7 @@ public class HealthCheckAppService : ApplicationService
         var resultCode = (strategy as IProvidesResultCode)?.ResultCode;
 
         var snapshot = endpoint.RecordSnapshot(
-            GuidGenerator.Create(),
+            _guidGenerator.Create(),
             executionResult.status,
             now,
             duration,
@@ -100,35 +82,8 @@ public class HealthCheckAppService : ApplicationService
 
         await _statusSnapshotRepository.InsertAsync(snapshot, autoSave: true);
         await _serviceEndpointRepository.UpdateAsync(endpoint, autoSave: true);
-        await CurrentUnitOfWork.SaveChangesAsync();
 
-        return ObjectMapper.Map<ServiceStatusSnapshot, RunCheckResultDto>(snapshot);
-        var now = Clock.Now;
-
-        return new RunCheckResultDto
-        {
-            ServiceEndpointId = endpoint.Id,
-            Status = MonitoringStatus.Unknown,
-            CheckedAt = now
-        };
-    }
-
-    [Authorize(MonitoringPermissions.View)]
-    public virtual async Task<List<ServiceStatusSnapshotDto>> GetHistoryAsync(Guid id, int take = 100)
-    {
-        await _serviceEndpointRepository.GetAsync(id);
-
-        var clampedTake = take <= 0 ? 100 : Math.Min(take, 500);
-
-        var queryable = await _statusSnapshotRepository.GetQueryableAsync();
-        var snapshots = await queryable
-            .Where(x => x.ServiceEndpointId == id)
-            .OrderByDescending(x => x.CheckedAt)
-            .ThenByDescending(x => x.Id)
-            .Take(clampedTake)
-            .ToListAsync();
-
-        return ObjectMapper.Map<List<ServiceStatusSnapshot>, List<ServiceStatusSnapshotDto>>(snapshots);
+        return snapshot;
     }
 
     private IHealthCheckStrategy GetStrategy(MonitoringServiceType serviceType)

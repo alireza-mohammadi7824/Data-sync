@@ -10,6 +10,18 @@
     Layout = null;
 }
 
+@section scripts {
+    <script>
+        (function () {
+            const refreshIntervalMs = 30000;
+
+            setInterval(function () {
+                window.location.reload();
+            }, refreshIntervalMs);
+        })();
+    </script>
+}
+
 @section main {
     @{ ViewData["Title"] = L["Monitoring:Title"]; }
 

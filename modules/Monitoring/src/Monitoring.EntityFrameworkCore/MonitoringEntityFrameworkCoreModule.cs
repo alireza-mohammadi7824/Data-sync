@@ -19,5 +19,7 @@ public class MonitoringEntityFrameworkCoreModule : AbpModule
             options.AddDefaultRepositories(includeAllEntities: true);
             options.AddRepository<ServiceEndpoint, ServiceEndpointRepository>();
         });
+
+        context.Services.AddTransient<IServiceEndpointRepository, ServiceEndpointRepository>();
     }
 }

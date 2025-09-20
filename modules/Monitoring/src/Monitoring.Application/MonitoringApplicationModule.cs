@@ -1,5 +1,11 @@
 using System;
-
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Monitoring.BackgroundWorkers;
+using Monitoring.Options;
+using Volo.Abp.Application;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.BackgroundWorkers;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
@@ -10,6 +16,7 @@ namespace Monitoring;
 [DependsOn(
     typeof(AbpDddApplicationModule),
     typeof(AbpAutoMapperModule),
+    typeof(AbpBackgroundWorkersModule),
     typeof(MonitoringDomainModule),
     typeof(MonitoringApplicationContractsModule)
 )]
@@ -18,6 +25,7 @@ public class MonitoringApplicationModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddAutoMapperObjectMapper<MonitoringApplicationModule>();
+        context.Services.AddOptions<MonitoringOptions>().BindConfiguration("Monitoring");
         context.Services.AddHttpClient("Monitoring", client =>
         {
             client.Timeout = Timeout.InfiniteTimeSpan;
@@ -35,5 +43,10 @@ public class MonitoringApplicationModule : AbpModule
         {
             options.AddMaps<MonitoringApplicationModule>(validate: true);
         });
+    }
+
+    public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+    {
+        await context.AddBackgroundWorkerAsync<MonitoringBackgroundWorker>();
     }
 }

@@ -83,6 +83,7 @@
                     else
                     {
                         <span id="last-check-time" class="text-muted">@L["Monitoring:NeverChecked"]</span>
+
                         @Model.Endpoint.LastCheckTime.Value.ToLocalTime().ToString("f")
                     }
                     else
