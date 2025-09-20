@@ -1,0 +1,91 @@
+@page "/Monitoring/Services/Create"
+@model Monitoring.Web.Pages.Monitoring.Services.CreateModel
+@using Monitoring.Localization
+@inject Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer<MonitoringResource> L
+
+@{
+    Layout = PageLayout;
+    ViewData["Title"] = L["Monitoring:CreateServiceTitle"];
+}
+
+<abp-breadcrumb>
+    <abp-breadcrumb-item href="~/Monitoring">@L["Monitoring:Title"]</abp-breadcrumb-item>
+    <abp-breadcrumb-item>@L["Monitoring:CreateService"]</abp-breadcrumb-item>
+</abp-breadcrumb>
+
+<div class="card shadow-sm">
+    <div class="card-body p-4 p-xl-5">
+        <h1 class="h3 fw-semibold mb-3">@L["Monitoring:CreateServiceHeading"]</h1>
+        <p class="text-muted mb-4">@L["Monitoring:CreateServiceDescription"]</p>
+
+        <form method="post" class="monitoring-service-form" novalidate>
+            <abp-validation-summary />
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <abp-input asp-for="Service.Name" label="@L["Monitoring:Fields.Name"]" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <abp-input asp-for="Service.IsEnabled" label="@L["Monitoring:Fields.IsEnabled"]" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <abp-select asp-for="Service.ServiceType"
+                               asp-items="Model.ServiceTypeOptions"
+                               label="@L["Monitoring:Fields.ServiceType"]"
+                               id="service-type-select" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <abp-input asp-for="Service.CheckIntervalSeconds"
+                               type="number"
+                               label="@L["Monitoring:Fields.CheckIntervalSeconds"]"
+                               min="10"
+                               step="5" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <abp-input asp-for="Service.TimeoutSeconds"
+                               type="number"
+                               label="@L["Monitoring:Fields.TimeoutSeconds"]"
+                               min="1"
+                               step="1" />
+                </div>
+                <div class="col-12">
+                    <abp-textarea asp-for="Service.Description"
+                                  rows="3"
+                                  label="@L["Monitoring:Fields.Description"]" />
+                </div>
+                <div class="col-12">
+                    <abp-input asp-for="Service.Target"
+                               label="@L["Monitoring:Fields.Target"]"
+                               placeholder="@L["Monitoring:Fields.TargetPlaceholder"]" />
+                    <div class="form-text service-type-hint" data-service-type="Http">@L["Monitoring:TargetHint.Http"]</div>
+                    <div class="form-text service-type-hint d-none" data-service-type="Api">@L["Monitoring:TargetHint.Api"]</div>
+                    <div class="form-text service-type-hint d-none" data-service-type="Tcp">@L["Monitoring:TargetHint.Tcp"]</div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a class="btn btn-outline-secondary" href="~/Monitoring">@L["Monitoring:Cancel"]</a>
+                <button type="submit" class="btn btn-primary">@L["Monitoring:Save"]</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        (function () {
+            const select = document.getElementById('service-type-select');
+            const hints = document.querySelectorAll('.service-type-hint');
+
+            function updateHints() {
+                const value = select?.value ?? '';
+                hints.forEach(hint => {
+                    const type = hint.getAttribute('data-service-type');
+                    hint.classList.toggle('d-none', type !== value);
+                });
+            }
+
+            select?.addEventListener('change', updateHints);
+            updateHints();
+        })();
+    </script>
+}

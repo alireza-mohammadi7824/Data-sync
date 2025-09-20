@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../../common.props" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Monitoring</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.Application" Version="8.3.1" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="8.3.1" />
+    <PackageReference Include="Volo.Abp.BackgroundWorkers" Version="8.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Monitoring.Application.Contracts/Monitoring.Application.Contracts.csproj" />
+    <ProjectReference Include="../Monitoring.Domain/Monitoring.Domain.csproj" />
+  </ItemGroup>
+</Project>
