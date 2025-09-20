@@ -13,6 +13,13 @@ public class TcpHealthCheck : IHealthCheckStrategy
     private const string HostPropertyName = "TcpHost";
     private const string PortPropertyName = "TcpPort";
 
+    private readonly ITcpConnector _tcpConnector;
+
+    public TcpHealthCheck(ITcpConnector tcpConnector)
+    {
+        _tcpConnector = tcpConnector;
+    }
+
     public async Task<(MonitoringStatus status, int? responseTimeMs, string message)> CheckAsync(ServiceEndpoint endpoint, CancellationToken cancellationToken)
     {
         if (!TryResolveHostAndPort(endpoint, out var host, out var port, out var validationMessage))
@@ -22,6 +29,8 @@ public class TcpHealthCheck : IHealthCheckStrategy
 
         try
         {
+            var stopwatch = Stopwatch.StartNew();
+            await _tcpConnector.ConnectAsync(host, port, cancellationToken);
             using var client = new TcpClient();
             var stopwatch = Stopwatch.StartNew();
             await client.ConnectAsync(host, port, cancellationToken);

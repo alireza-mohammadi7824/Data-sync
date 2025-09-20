@@ -33,6 +33,10 @@ public class MonitoringApplicationModule : AbpModule
 
         context.Services.AddTransient<ServiceEndpoints.IServiceEndpointAppService, ServiceEndpoints.ServiceEndpointAppService>();
         context.Services.AddTransient<ServiceEndpoints.IHealthCheckAppService, ServiceEndpoints.HealthCheckAppService>();
+        context.Services.AddTransient<ServiceEndpoints.HealthChecks.ITcpConnector, ServiceEndpoints.HealthChecks.DefaultTcpConnector>();
+        context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.HttpHealthCheck>();
+        context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.ApiHealthCheck>();
+        context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.TcpHealthCheck>();
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.HttpHealthCheck>();
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.ApiHealthCheck>();
         context.Services.AddTransient<ServiceEndpoints.HealthChecks.IHealthCheckStrategy, ServiceEndpoints.HealthChecks.TcpHealthCheck>();
