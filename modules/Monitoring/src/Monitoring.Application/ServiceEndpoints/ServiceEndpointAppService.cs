@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Monitoring.Permissions;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -61,6 +62,8 @@ public class ServiceEndpointAppService : CrudAppService<
     {
         var queryable = await GetQueryableWithDetailsAsync();
         var entity = await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(x => x.Id == id));
+
+        var entity = await queryable.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null)
         {
             throw new EntityNotFoundException(typeof(ServiceEndpoint), id);
@@ -72,6 +75,11 @@ public class ServiceEndpointAppService : CrudAppService<
     protected override Task<IQueryable<ServiceEndpoint>> CreateFilteredQueryAsync(PagedAndSortedResultRequestDto input)
     {
         return GetQueryableWithDetailsAsync();
+    }
+
+    protected override string GetDefaultSorting()
+    {
+        return nameof(ServiceEndpoint.Name);
     }
 
     protected virtual Task<IQueryable<ServiceEndpoint>> GetQueryableWithDetailsAsync()

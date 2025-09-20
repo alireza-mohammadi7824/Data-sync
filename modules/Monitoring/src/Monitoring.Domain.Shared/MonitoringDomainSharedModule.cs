@@ -2,6 +2,8 @@ using Monitoring.Localization;
 using Monitoring.Permissions;
 using Volo.Abp.Authorization;
 using Volo.Abp.Authorization.Permissions;
+using Volo.Abp.Ddd.Domain.Shared;
+using Volo.Abp.Domain.Shared;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.VirtualFileSystem;
@@ -10,6 +12,9 @@ namespace Monitoring;
 
 [DependsOn(
     typeof(AbpAuthorizationModule)
+    typeof(AbpDddDomainSharedModule),
+    typeof(AbpAuthorizationModule)
+    typeof(AbpDddDomainSharedModule)
 )]
 public class MonitoringDomainSharedModule : AbpModule
 {
@@ -32,6 +37,7 @@ public class MonitoringDomainSharedModule : AbpModule
         Configure<AbpAuthorizationOptions>(options =>
         {
             options.AddProvider<MonitoringPermissionDefinitionProvider>();
+            options.Providers.Add<MonitoringPermissionDefinitionProvider>();
         });
     }
 }

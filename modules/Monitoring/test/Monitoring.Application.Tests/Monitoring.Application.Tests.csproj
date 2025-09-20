@@ -12,6 +12,7 @@
     <ProjectReference Include="../../src/Monitoring.Application/Monitoring.Application.csproj" />
     <ProjectReference Include="../../src/Monitoring.EntityFrameworkCore/Monitoring.EntityFrameworkCore.csproj" />
     <ProjectReference Include="../../../../test/HRSDataIntegration.TestBase/HRSDataIntegration.TestBase.csproj" />
+    <ProjectReference Include="../../../test/HRSDataIntegration.TestBase/HRSDataIntegration.TestBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

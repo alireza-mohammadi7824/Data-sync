@@ -3,12 +3,22 @@ using Volo.Abp.Application;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.Validation.Localization;
+using Microsoft.Extensions.DependencyInjection;
+using Monitoring.Localization;
+using Volo.Abp.Application;
+using Volo.Abp.AspNetCore.Mvc.Localization;
+using Volo.Abp.Localization;
+using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Localization;
+using Volo.Abp.Application;
+using Volo.Abp.Modularity;
 
 namespace Monitoring;
 
 [DependsOn(
     typeof(MonitoringDomainSharedModule),
     typeof(AbpApplicationContractsModule)
+    typeof(AbpDddApplicationContractsModule)
 )]
 public class MonitoringApplicationContractsModule : AbpModule
 {
@@ -19,6 +29,9 @@ public class MonitoringApplicationContractsModule : AbpModule
             options.Resources
                 .Get<MonitoringResource>()
                 .AddBaseTypes(typeof(AbpValidationResource));
+        Configure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
+        {
+            options.AddAssemblyResource<MonitoringResource>(typeof(MonitoringApplicationContractsModule).Assembly);
         });
     }
 }

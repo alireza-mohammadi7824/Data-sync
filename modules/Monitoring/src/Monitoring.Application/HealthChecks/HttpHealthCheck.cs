@@ -42,6 +42,7 @@ public class HttpHealthCheck : IHealthCheckStrategy, IProvidesResultCode
                 ? TimeSpan.FromSeconds(endpoint.TimeoutSeconds)
                 : TimeSpan.FromSeconds(ServiceEndpointConsts.MinTimeoutSeconds);
             client.Timeout = timeout;
+            client.Timeout = Timeout.InfiniteTimeSpan;
 
             var stopwatch = Stopwatch.StartNew();
             using var response = await client.SendAsync(request, cancellationToken);
