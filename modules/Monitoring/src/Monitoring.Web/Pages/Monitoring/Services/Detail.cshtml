@@ -1,0 +1,274 @@
+@page "/Monitoring/Services/Detail/{Id:guid}"
+@model Monitoring.Web.Pages.Monitoring.Services.DetailModel
+@using Monitoring.Localization
+@using Monitoring.Permissions
+@using System.Linq
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer<MonitoringResource> L
+
+@{
+    Layout = null;
+}
+
+@section main {
+    @{ ViewData["Title"] = L["Monitoring:ServiceDetailsTitle", Model.Endpoint.Name]; }
+
+    <abp-breadcrumb>
+        <abp-breadcrumb-item href="~/Monitoring">@L["Monitoring:Title"]</abp-breadcrumb-item>
+        <abp-breadcrumb-item>@Model.Endpoint.Name</abp-breadcrumb-item>
+    </abp-breadcrumb>
+
+    <div class="d-flex flex-column flex-lg-row gap-3 mb-4 align-items-lg-center justify-content-between">
+        <div>
+            <h1 class="mb-1">@L["Monitoring:ServiceDetailsHeading", Model.Endpoint.Name]</h1>
+            <p class="text-muted mb-0">@L["Monitoring:ServiceDetailsDescription"]</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <abp-authorize policy="@MonitoringPermissions.RunCheck">
+                <abp-button button-type="Primary"
+                            id="run-check-button"
+                            text="@L[\"Monitoring:RunCheckNow\"]"
+                            icon="history" />
+            </abp-authorize>
+            <abp-authorize policy="@MonitoringPermissions.Edit">
+                <abp-button button-type="OutlinePrimary"
+                            text="@L[\"Monitoring:Actions.Edit\"]"
+                            href="~/Monitoring/Services/Edit/@Model.Id"
+                            icon="edit" />
+            </abp-authorize>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">@L["Monitoring:Fields.Name"]</dt>
+                <dd class="col-sm-9">@Model.Endpoint.Name</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.Description"]</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Endpoint.Description) ? L["Monitoring:DescriptionNotProvided"] : Model.Endpoint.Description)</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.ServiceType"]</dt>
+                <dd class="col-sm-9">@Model.GetServiceTypeText(Model.Endpoint.ServiceType)</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.Target"]</dt>
+                <dd class="col-sm-9 text-break">@Model.Endpoint.Target</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.IsEnabled"]</dt>
+                <dd class="col-sm-9">@Model.GetEnabledText(Model.Endpoint.IsEnabled)</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.CheckIntervalSeconds"]</dt>
+                <dd class="col-sm-9">@Model.GetDurationText(Model.Endpoint.CheckIntervalSeconds)</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:Fields.TimeoutSeconds"]</dt>
+                <dd class="col-sm-9">@Model.GetDurationText(Model.Endpoint.TimeoutSeconds)</dd>
+
+                <dt class="col-sm-3">@L["Monitoring:LastKnownStatus"]</dt>
+                <dd class="col-sm-9">
+                    <span id="last-status-badge" class="@Model.GetStatusBadgeClass(Model.Endpoint.LastKnownStatus)">
+                        @Model.GetStatusText(Model.Endpoint.LastKnownStatus)
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">@L["Monitoring:LastCheckTime"]</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Endpoint.LastCheckTime.HasValue)
+                    {
+                        <span id="last-check-time">@Model.Endpoint.LastCheckTime.Value.ToLocalTime().ToString("f")</span>
+                    }
+                    else
+                    {
+                        <span id="last-check-time" class="text-muted">@L["Monitoring:NeverChecked"]</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">@L["Monitoring:LastResponseTime"]</dt>
+                <dd class="col-sm-9">
+                    <span id="last-response-time">@Model.GetResponseDurationText(Model.Endpoint.LastResponseDurationMilliseconds)</span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="h5 fw-semibold mb-3">@L["Monitoring:HistoryHeading"]</h2>
+            <div class="table-responsive">
+                <table class="table align-middle" id="history-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">@L["Monitoring:HistoryTable.Status"]</th>
+                            <th scope="col">@L["Monitoring:HistoryTable.CheckedAt"]</th>
+                            <th scope="col">@L["Monitoring:HistoryTable.Duration"]</th>
+                            <th scope="col">@L["Monitoring:HistoryTable.ResultCode"]</th>
+                            <th scope="col">@L["Monitoring:HistoryTable.Message"]</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        @if (Model.History.Any())
+                        {
+                            foreach (var snapshot in Model.History)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="@Model.GetStatusBadgeClass(snapshot.Status)">
+                                            @Model.GetStatusText(snapshot.Status)
+                                        </span>
+                                    </td>
+                                    <td>@snapshot.CheckedAt.ToLocalTime().ToString("f")</td>
+                                    <td>@Model.GetResponseDurationText(snapshot.DurationMilliseconds)</td>
+                                    <td>@(snapshot.ResultCode?.ToString() ?? L["Monitoring:NotAvailable"].Value)</td>
+                                    <td>@(string.IsNullOrWhiteSpace(snapshot.Notes) ? L["Monitoring:NotAvailable"].Value : snapshot.Notes)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">@L["Monitoring:HistoryEmpty"]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        (function () {
+            const runCheckButton = document.getElementById('run-check-button');
+            const historyBody = document.getElementById('history-body');
+            const statusTexts = @Html.Raw(JsonSerializer.Serialize(Model.StatusTextLookup));
+            const statusBadges = @Html.Raw(JsonSerializer.Serialize(Model.StatusBadgeLookup));
+            const millisecondsFormat = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:MillisecondsFormat", "{0}"].Value));
+            const notAvailableText = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:NotAvailable"].Value));
+            const historyEmptyText = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:HistoryEmpty"].Value));
+            const runCheckSuccess = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:RunCheckSuccess"].Value));
+            const runCheckFailure = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:RunCheckFailure"].Value));
+            const neverCheckedText = @Html.Raw(JsonSerializer.Serialize(L["Monitoring:NeverChecked"].Value));
+            const runCheckUrl = '@Url.Page(null, "RunCheck", new { id = Model.Id })';
+
+            const lastStatusBadge = document.getElementById('last-status-badge');
+            const lastCheckTime = document.getElementById('last-check-time');
+            const lastResponseTime = document.getElementById('last-response-time');
+
+            function formatDuration(value) {
+                if (value === undefined || value === null) {
+                    return notAvailableText;
+                }
+
+                return millisecondsFormat.replace('{0}', value);
+            }
+
+            function renderHistory(history) {
+                historyBody.innerHTML = '';
+
+                if (!history || history.length === 0) {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 5;
+                    cell.className = 'text-center text-muted';
+                    cell.textContent = historyEmptyText;
+                    row.appendChild(cell);
+                    historyBody.appendChild(row);
+                    return;
+                }
+
+                history.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    const statusCell = document.createElement('td');
+                    const statusKey = (item.status ?? '').toString();
+                    const badge = document.createElement('span');
+                    badge.className = statusBadges[statusKey] ?? 'badge bg-secondary-subtle text-secondary';
+                    badge.textContent = statusTexts[statusKey] ?? statusKey;
+                    statusCell.appendChild(badge);
+                    row.appendChild(statusCell);
+
+                    const checkedAtCell = document.createElement('td');
+                    checkedAtCell.textContent = item.checkedAt ? new Date(item.checkedAt).toLocaleString() : notAvailableText;
+                    row.appendChild(checkedAtCell);
+
+                    const durationCell = document.createElement('td');
+                    durationCell.textContent = formatDuration(item.durationMilliseconds);
+                    row.appendChild(durationCell);
+
+                    const resultCodeCell = document.createElement('td');
+                    resultCodeCell.textContent = item.resultCode !== null && item.resultCode !== undefined
+                        ? item.resultCode.toString()
+                        : notAvailableText;
+                    row.appendChild(resultCodeCell);
+
+                    const messageCell = document.createElement('td');
+                    messageCell.textContent = item.notes && item.notes.trim().length > 0
+                        ? item.notes
+                        : notAvailableText;
+                    row.appendChild(messageCell);
+
+                    historyBody.appendChild(row);
+                });
+            }
+
+            async function runCheck() {
+                if (!runCheckButton) {
+                    return;
+                }
+
+                runCheckButton.disabled = true;
+                runCheckButton.classList.add('disabled');
+
+                try {
+                    const response = await abp.ajax({
+                        url: runCheckUrl,
+                        type: 'POST',
+                        headers: {
+                            [abp.security.antiForgery.tokenHeaderName]: abp.security.antiForgery.getToken()
+                        }
+                    });
+
+                    let statusKey = '';
+
+                    if (response.result) {
+                        statusKey = (response.result.status ?? '').toString();
+                        const statusText = statusTexts[statusKey] ?? statusKey;
+                        const badgeClass = statusBadges[statusKey] ?? 'badge bg-secondary-subtle text-secondary';
+
+                        if (lastStatusBadge) {
+                            lastStatusBadge.className = badgeClass;
+                            lastStatusBadge.textContent = statusText;
+                        }
+
+                        if (lastCheckTime) {
+                            if (response.result.checkedAt) {
+                                lastCheckTime.classList.remove('text-muted');
+                                lastCheckTime.textContent = new Date(response.result.checkedAt).toLocaleString();
+                            } else {
+                                lastCheckTime.classList.add('text-muted');
+                                lastCheckTime.textContent = neverCheckedText;
+                            }
+                        }
+
+                        if (lastResponseTime) {
+                            lastResponseTime.textContent = formatDuration(response.result.durationMilliseconds);
+                        }
+                    }
+
+                    const statusTextForNotification = statusTexts[statusKey] ?? (statusKey ? statusKey : notAvailableText);
+                    const successMessage = abp.utils.formatString(runCheckSuccess, statusTextForNotification);
+                    abp.notify.success(successMessage);
+
+                    renderHistory(response.history);
+                } catch (error) {
+                    abp.notify.error(runCheckFailure);
+                } finally {
+                    runCheckButton.disabled = false;
+                    runCheckButton.classList.remove('disabled');
+                }
+            }
+
+            runCheckButton?.addEventListener('click', runCheck);
+        })();
+    </script>
+}
